@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Deal {
+  id String @id @default(uuid())
+  userId String // References clerk user
+  title String @db.Text
+  link String @db.Text
+  description String? @db.Text
+  promoCode String?
+
+  score Int // Overall score based on votes
+  
+  isPublished Boolean @default(false)
+
+  imageUrls String[]
+  
+  categoryId String?
+  
+  category Category? @relation(fields: [categoryId], references: [id])
+  
+  comments Comment[]
+  votes Vote[]
+
+  startDate DateTime?
+  endDate DateTime?
+
+  price Float?
+  nextBestPrice Float?
+  shippingPrice Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+model Category {
+  id String @id @default(uuid())
+  name String @unique
+  deals Deal[]
+}
+
+model Vote {
+  id String @id @default(uuid())
+  userId String
+  dealId String
+  voteValue Int // +1 for upvote, -1 for downvote
+
+  deal Deal @relation(fields: [dealId], references: [id])
+
+  @@index([dealId])
+}
+
+model Comment {
+  id String @id @default(uuid())
+  dealId String
+  content String @db.Text
+  userId String
+  createdAt DateTime @default(now())
+
+  reactions CommentReaction[]
+
+  deal Deal @relation(fields: [dealId], references: [id])
+
+  @@index([dealId])
+}
+
+model CommentReaction {
+  id String   @id @default(uuid())
+  commentId String
+  reaction String   // "like", "funny", "helpful"
+
+  comment Comment @relation(fields: [commentId], references: [id])
+
+  @@index([commentId])
+}
