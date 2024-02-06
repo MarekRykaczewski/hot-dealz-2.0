@@ -8,40 +8,48 @@ import SearchInput from "./search-input";
 const Navbar = () => {
   const { userId } = auth();
   return (
-    <div className="py-4 px-[20vw] border-b h-full flex items-center justify-between bg-white shadow-sm">
-      <div className="p-6">
-        <Logo />
-      </div>
+    <div className="border-b h-full bg-stone-800 shadow-sm px-4">
+      <div className="flex mx-auto max-w-5xl h-full items-center justify-between">
+        <div className="p-6">
+          <Link href="/">
+            <Logo />
+          </Link>
+        </div>
 
-      <div className="flex items-center space-x-4">
-        <SearchInput />
+        <div className="flex items-center space-x-4">
+          <SearchInput />
 
-        {!userId && (
-          <Link href="/sign-up">
-            <Button variant="orange" size="sm" className="gap-2 font-semibold">
-              <CircleUser />
-              Sign in
+          {!userId && (
+            <Link href="/sign-up">
+              <Button
+                variant="orange"
+                size="sm"
+                className="gap-2 font-semibold"
+              >
+                <CircleUser />
+                Sign in
+              </Button>
+            </Link>
+          )}
+
+          <Link href="/create">
+            <Button className="rounded-full" variant="orange" size="icon">
+              <Plus />
             </Button>
           </Link>
-        )}
 
-        <Link href="/create">
-          <Button className="rounded-full" variant="orange" size="icon">
-            <Plus />
-          </Button>
-        </Link>
-
-        {userId && (
-          <UserButton
-            appearance={{
-              elements: {
-                avatarBox: "h-10 w-10",
-              },
-            }}
-            userProfileMode="modal"
-            afterSignOutUrl="/"
-          />
-        )}
+          {userId && (
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "h-10 w-10",
+                },
+              }}
+              userProfileMode="modal"
+              afterSignOutUrl="/"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
