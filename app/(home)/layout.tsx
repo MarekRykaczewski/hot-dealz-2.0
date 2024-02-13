@@ -10,7 +10,7 @@ export default function layout({
       <div className="h-[80px] fixed w-full">
         <Navbar />
       </div>
-      <main className="h-full">{children}</main>
+      <main className="h-[100vh] pt-[80px]">{children}</main>
     </div>
   );
 }
