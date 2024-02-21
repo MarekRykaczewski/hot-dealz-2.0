@@ -2,19 +2,32 @@ import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { DatePicker } from "@/components/ui/date-picker";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
 
+const DealFinalFormSchema = z.object({
+  startDate: z.date(),
+  endDate: z.date(),
+  category: z.string(),
+});
+
+interface FormData {
+  startDate: Date;
+  endDate: Date;
+  category: string;
+}
+
 interface DealFinalFormProps {
+  updateFormData: (formData: FormData) => void;
   currentStep: number;
   setCurrentStep: (index: number) => void;
-  form: any;
   options: {
     name: string;
     id: string;
@@ -22,19 +35,41 @@ interface DealFinalFormProps {
 }
 
 const DealFinalForm = ({
+  updateFormData,
   currentStep,
   setCurrentStep,
-  form,
   options,
 }: DealFinalFormProps) => {
+  const form = useForm({
+    resolver: zodResolver(DealFinalFormSchema),
+    defaultValues: {
+      startDate: new Date(),
+      endDate: new Date(),
+      category: "",
+    },
+  });
+
+  const handleSubmit = () => {
+    form.trigger().then((isValid: boolean) => {
+      if (isValid) {
+        const formData = form.getValues() as FormData;
+        updateFormData(formData);
+        setCurrentStep(currentStep + 1);
+      } else {
+        console.log("Form validation failed");
+      }
+    });
+  };
+
   return (
     <>
       <h1 className="text-3xl text-center font-bold">Wrapping up</h1>
       <p className="text-lg text-center text-slate-600">
         You&apos;re almost there
       </p>
-      <Form {...form}>
-        <form onSubmit={() => setCurrentStep(1)} className="space-y-8 mt-8">
+
+      <FormProvider {...form}>
+        <div className="space-y-8 mt-8">
           <div className="flex justify-between space-x-3">
             <FormField
               control={form.control}
@@ -43,7 +78,7 @@ const DealFinalForm = ({
                 <FormItem className="flex flex-col">
                   <FormLabel>Start Date</FormLabel>
                   <FormControl>
-                    <DatePicker />
+                    <DatePicker {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -56,7 +91,7 @@ const DealFinalForm = ({
                 <FormItem className="flex flex-col">
                   <FormLabel>End Date</FormLabel>
                   <FormControl>
-                    <DatePicker />
+                    <DatePicker {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,12 +123,12 @@ const DealFinalForm = ({
             <Button type="button" variant="ghost">
               Cancel
             </Button>
-            <Button type="submit" disabled={!z.isValid}>
+            <Button type="submit" onClick={handleSubmit}>
               Continue
             </Button>
           </div>
-        </form>
-      </Form>
+        </div>
+      </FormProvider>
     </>
   );
 };

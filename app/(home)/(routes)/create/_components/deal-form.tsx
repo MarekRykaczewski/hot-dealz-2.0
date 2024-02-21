@@ -1,10 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Category } from "@prisma/client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import DealDescriptionForm from "./deal-description-form";
 import DealFinalForm from "./deal-final-form";
 import DealInfo from "./deal-info-form";
@@ -17,28 +14,15 @@ interface DealFormProps {
 
 const DealForm = ({ categories }: DealFormProps) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [formData, setFormData] = useState({});
 
-  const formSchema = z.object({
-    link: z.string().url({ message: "Invalid URL" }).min(1, {
-      message: "Link is required",
-    }),
-    title: z.string().min(1),
-    price: z.number(),
-    nextBestPrice: z.number(),
-    promoCode: z.string(),
-    shippingCost: z.number(),
-    description: z.string().max(500),
-    startDate: z.date(),
-    endDate: z.date(),
-    category: z.string(),
-  });
+  const updateFormData = (data: {}) => {
+    setFormData((prevData) => ({ ...prevData, ...data }));
+  };
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      link: "",
-    },
-  });
+  const onSubmit = () => {
+    console.log(formData);
+  };
 
   return (
     <div className="flex w-full">
@@ -46,14 +30,14 @@ const DealForm = ({ categories }: DealFormProps) => {
       <div className="flex flex-col mb-[25vh] p-6 w-full items-center justify-center">
         {currentStep === 0 && (
           <DealLinkForm
-            form={form}
+            updateFormData={updateFormData}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
           />
         )}
         {currentStep === 1 && (
           <DealInfo
-            form={form}
+            updateFormData={updateFormData}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
           />
@@ -61,14 +45,14 @@ const DealForm = ({ categories }: DealFormProps) => {
         {currentStep === 2 && <div> TODO </div>}
         {currentStep === 3 && (
           <DealDescriptionForm
-            form={form}
+            updateFormData={updateFormData}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
           />
         )}
         {currentStep === 4 && (
           <DealFinalForm
-            form={form}
+            updateFormData={updateFormData}
             options={categories}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}

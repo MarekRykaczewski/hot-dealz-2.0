@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -8,25 +7,45 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const dealLinkFormSchema = z.object({
+  link: z.string().url({ message: "Invalid URL" }).min(1, {
+    message: "Link is required",
+  }),
+});
 
 interface DealLinkFormProps {
+  updateFormData: (formData: { link: string }) => void;
   currentStep: number;
   setCurrentStep: (index: number) => void;
-  form: any;
 }
 
 const DealLinkForm = ({
+  updateFormData,
   currentStep,
   setCurrentStep,
-  form,
 }: DealLinkFormProps) => {
-  const handleSubmit = () => {
-    if (!form.formState.errors.link) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
+  const form = useForm({
+    resolver: zodResolver(dealLinkFormSchema),
+    defaultValues: {
+      link: "",
+    },
+  });
 
-  console.log("[FORM]", form.formState.errors);
+  const handleSubmit = () => {
+    form.trigger().then((isValid: boolean) => {
+      if (isValid) {
+        const formData = form.getValues();
+        updateFormData(formData);
+        setCurrentStep(currentStep + 1);
+      } else {
+        console.log("Form validation failed");
+      }
+    });
+  };
 
   return (
     <>
@@ -34,11 +53,9 @@ const DealLinkForm = ({
       <p className="text-lg text-center text-slate-600">
         Paste link with a deal below
       </p>
-      <Form {...form}>
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-8 mt-8 w-full max-w-xl"
-        >
+
+      <FormProvider {...form}>
+        <div className="space-y-8 mt-8 w-full max-w-xl">
           <FormField
             control={form.control}
             name="link"
@@ -56,12 +73,12 @@ const DealLinkForm = ({
             )}
           />
           <div className="flex items-center gap-x-2">
-            <Button type="submit" disabled={!form.formState.errors.link}>
+            <Button type="button" onClick={handleSubmit}>
               Continue
             </Button>
           </div>
-        </form>
-      </Form>
+        </div>
+      </FormProvider>
     </>
   );
 };

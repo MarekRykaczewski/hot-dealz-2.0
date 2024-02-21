@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -8,19 +7,64 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { HandCoins, Scissors, Truck } from "lucide-react";
+import { FormProvider, useForm } from "react-hook-form";
+import { z } from "zod";
 
-interface DealInfoProps {
-  currentStep: number;
-  setCurrentStep: (index: number) => void;
-  form: any;
+const dealInfoSchema = z
+  .object({
+    title: z.string().min(1),
+    price: z.coerce.number().positive(),
+    nextBestPrice: z.coerce.number().positive(),
+    promoCode: z.string().optional(),
+    shippingCost: z.coerce.number(),
+  })
+  .refine((data) => data.price < data.nextBestPrice, {
+    message: "Price must be smaller than next best price",
+    path: ["price"],
+  });
+
+interface FormData {
+  title: string;
+  price: number;
+  nextBestPrice: number;
+  promoCode?: string;
+  shippingCost: number;
 }
 
-const DealInfo = ({ currentStep, setCurrentStep, form }: DealInfoProps) => {
+interface DealInfoProps {
+  updateFormData: (formData: FormData) => void;
+  currentStep: number;
+  setCurrentStep: (index: number) => void;
+}
+
+const DealInfo = ({
+  currentStep,
+  setCurrentStep,
+  updateFormData,
+}: DealInfoProps) => {
+  const form = useForm({
+    resolver: zodResolver(dealInfoSchema),
+    defaultValues: {
+      title: "",
+      price: 0,
+      nextBestPrice: 0,
+      promoCode: "",
+      shippingCost: 0,
+    },
+  });
+
   const handleSubmit = () => {
-    if (form.formState.isValid) {
-      setCurrentStep(currentStep + 1);
-    }
+    form.trigger().then((isValid: boolean) => {
+      if (isValid) {
+        const formData = form.getValues() as FormData;
+        updateFormData(formData);
+        setCurrentStep(currentStep + 1);
+      } else {
+        console.log("Form validation failed");
+      }
+    });
   };
 
   return (
@@ -29,8 +73,9 @@ const DealInfo = ({ currentStep, setCurrentStep, form }: DealInfoProps) => {
       <p className="text-lg text-center text-slate-600">
         Tell us the essential information about the deal
       </p>
-      <Form {...form}>
-        <form onSubmit={() => setCurrentStep(1)} className="space-y-8 mt-8">
+
+      <FormProvider {...form}>
+        <div className="space-y-8 mt-8">
           <FormField
             control={form.control}
             name="title"
@@ -38,10 +83,7 @@ const DealInfo = ({ currentStep, setCurrentStep, form }: DealInfoProps) => {
               <FormItem>
                 <FormLabel>Deal Title</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="https://www.example.com/greatdeal..."
-                    {...field}
-                  />
+                  <Input placeholder="Great Deal" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -56,7 +98,12 @@ const DealInfo = ({ currentStep, setCurrentStep, form }: DealInfoProps) => {
                   <FormLabel>Deal Price</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Input className="pl-9" placeholder="29.99" {...field} />
+                      <Input
+                        type="number"
+                        className="pl-9"
+                        placeholder="29.99"
+                        {...field}
+                      />
                       <HandCoins
                         size={20}
                         className="absolute top-2.5 left-2.5 text-slate-500 font-bold"
@@ -75,7 +122,12 @@ const DealInfo = ({ currentStep, setCurrentStep, form }: DealInfoProps) => {
                   <FormLabel>Next Best Price</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Input className="pl-9" placeholder="59.99" {...field} />
+                      <Input
+                        type="number"
+                        className="pl-9"
+                        placeholder="59.99"
+                        {...field}
+                      />
                       <HandCoins
                         size={20}
                         className="absolute top-2.5 left-2.5 text-slate-500 font-bold"
@@ -136,16 +188,12 @@ const DealInfo = ({ currentStep, setCurrentStep, form }: DealInfoProps) => {
             <Button type="button" variant="ghost">
               Back
             </Button>
-            <Button
-              onClick={handleSubmit}
-              type="button"
-              disabled={!form.formState.isValid}
-            >
+            <Button onClick={handleSubmit} type="button">
               Continue
             </Button>
           </div>
-        </form>
-      </Form>
+        </div>
+      </FormProvider>
     </>
   );
 };
