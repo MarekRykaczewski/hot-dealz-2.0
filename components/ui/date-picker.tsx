@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-export function DatePicker() {
+interface DatePickerProps {
+  onChange: (value: Date) => void;
+}
+
+export function DatePicker({ onChange }: DatePickerProps) {
   const [date, setDate] = React.useState<Date>();
 
   return (
@@ -34,7 +38,12 @@ export function DatePicker() {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={(newDate) => {
+            setDate(newDate);
+            if (newDate instanceof Date) {
+              onChange(newDate);
+            }
+          }}
           initialFocus
         />
       </PopoverContent>
