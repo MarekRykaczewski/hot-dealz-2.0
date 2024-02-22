@@ -15,13 +15,13 @@ import * as z from "zod";
 const DealFinalFormSchema = z.object({
   startDate: z.date(),
   endDate: z.date(),
-  category: z.string(),
+  categoryId: z.string(),
 });
 
 interface FormData {
   startDate: Date;
   endDate: Date;
-  category: string;
+  categoryId: string;
 }
 
 interface DealFinalFormProps {
@@ -45,7 +45,7 @@ const DealFinalForm = ({
     defaultValues: {
       startDate: new Date(),
       endDate: new Date(),
-      category: "",
+      categoryId: "",
     },
   });
 
@@ -101,7 +101,7 @@ const DealFinalForm = ({
 
           <FormField
             control={form.control}
-            name="category"
+            name="categoryId"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Category</FormLabel>
