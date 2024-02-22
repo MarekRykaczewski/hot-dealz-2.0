@@ -103,6 +103,10 @@ const DealInfo = ({
                         className="pl-9"
                         placeholder="29.99"
                         {...field}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          field.onChange(value || undefined);
+                        }}
                       />
                       <HandCoins
                         size={20}
@@ -127,6 +131,10 @@ const DealInfo = ({
                         className="pl-9"
                         placeholder="59.99"
                         {...field}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          field.onChange(value || undefined);
+                        }}
                       />
                       <HandCoins
                         size={20}
@@ -172,7 +180,15 @@ const DealInfo = ({
                 <FormLabel>Shipping Cost</FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <Input className="pl-9" placeholder="0.00" {...field} />
+                    <Input
+                      className="pl-9"
+                      placeholder="0.00"
+                      {...field}
+                      onChange={(e) => {
+                        const value = parseFloat(e.target.value);
+                        field.onChange(value || undefined);
+                      }}
+                    />
                     <Truck
                       size={20}
                       className="absolute top-2.5 left-2.5 text-slate-500 font-bold"
