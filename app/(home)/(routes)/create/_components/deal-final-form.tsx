@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 
 const DealFinalFormSchema = z.object({
@@ -25,21 +25,14 @@ interface FormData {
 }
 
 interface DealFinalFormProps {
-  updateFormData: (formData: FormData) => void;
-  currentStep: number;
-  setCurrentStep: (index: number) => void;
+  handleFormStep: (form: UseFormReturn<FormData>) => void;
   options: {
     name: string;
     id: string;
   }[];
 }
 
-const DealFinalForm = ({
-  updateFormData,
-  currentStep,
-  setCurrentStep,
-  options,
-}: DealFinalFormProps) => {
+const DealFinalForm = ({ handleFormStep, options }: DealFinalFormProps) => {
   const form = useForm({
     resolver: zodResolver(DealFinalFormSchema),
     defaultValues: {
@@ -48,18 +41,6 @@ const DealFinalForm = ({
       categoryId: "",
     },
   });
-
-  const handleSubmit = () => {
-    form.trigger().then((isValid: boolean) => {
-      if (isValid) {
-        const formData = form.getValues() as FormData;
-        updateFormData(formData);
-        setCurrentStep(currentStep + 1);
-      } else {
-        console.log("Form validation failed");
-      }
-    });
-  };
 
   return (
     <>
@@ -123,7 +104,7 @@ const DealFinalForm = ({
             <Button type="button" variant="ghost">
               Cancel
             </Button>
-            <Button type="submit" onClick={handleSubmit}>
+            <Button type="submit" onClick={() => handleFormStep(form)}>
               Continue
             </Button>
           </div>

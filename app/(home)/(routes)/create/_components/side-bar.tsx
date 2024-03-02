@@ -2,14 +2,27 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Image, Link, ListChecks, NotebookText, Sparkles } from "lucide-react";
+import {
+  Check,
+  Image,
+  Link,
+  ListChecks,
+  NotebookText,
+  Presentation,
+  Sparkles,
+} from "lucide-react";
 
 interface SideBarProps {
   currentStep: number;
   setCurrentStep: (index: number) => void;
+  formCompletion: boolean[];
 }
 
-const SideBar = ({ setCurrentStep, currentStep }: SideBarProps) => {
+const SideBar = ({
+  setCurrentStep,
+  currentStep,
+  formCompletion,
+}: SideBarProps) => {
   const routesMap = [
     {
       title: "Link",
@@ -31,22 +44,30 @@ const SideBar = ({ setCurrentStep, currentStep }: SideBarProps) => {
       title: "Final Details",
       icon: ListChecks,
     },
+    {
+      title: "Review",
+      icon: Presentation,
+    },
   ];
   return (
-    <div className="p-6 border-r bg-slate-100 text-gray-800 h-full w-full max-w-xs">
+    <div className="p-6 border-r text-gray-800 h-full w-full max-w-xs">
       <h1 className="text-2xl font-semibold mb-10">Publish your deal</h1>
       <div className="flex flex-col gap-y-4">
         {routesMap.map((route, index) => (
           <Button
             onClick={() => setCurrentStep(index)}
             className={cn(
-              "flex hover:bg-white justify-start gap-3 font-semibold",
-              currentStep === index && "bg-white"
+              "flex justify-start gap-3 font-semibold",
+              currentStep === index && "ring-1 ring-black"
             )}
-            variant="ghost"
+            variant={formCompletion[index] ? "success" : "ghost"}
             key={route.title}
           >
-            <route.icon size={22} />
+            {formCompletion[index] ? (
+              <Check size={22} />
+            ) : (
+              <route.icon size={22} />
+            )}
             {route.title}
           </Button>
         ))}

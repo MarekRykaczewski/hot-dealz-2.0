@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandCoins, Scissors, Truck } from "lucide-react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const dealInfoSchema = z
@@ -34,17 +34,11 @@ interface FormData {
 }
 
 interface DealInfoProps {
-  updateFormData: (formData: FormData) => void;
-  currentStep: number;
-  setCurrentStep: (index: number) => void;
+  handleFormStep: (form: UseFormReturn<FormData>) => void;
 }
 
-const DealInfo = ({
-  currentStep,
-  setCurrentStep,
-  updateFormData,
-}: DealInfoProps) => {
-  const form = useForm({
+const DealInfo = ({ handleFormStep }: DealInfoProps) => {
+  const form = useForm<FormData>({
     resolver: zodResolver(dealInfoSchema),
     defaultValues: {
       title: "",
@@ -54,18 +48,6 @@ const DealInfo = ({
       shippingCost: 0,
     },
   });
-
-  const handleSubmit = () => {
-    form.trigger().then((isValid: boolean) => {
-      if (isValid) {
-        const formData = form.getValues() as FormData;
-        updateFormData(formData);
-        setCurrentStep(currentStep + 1);
-      } else {
-        console.log("Form validation failed");
-      }
-    });
-  };
 
   return (
     <>
@@ -204,7 +186,7 @@ const DealInfo = ({
             <Button type="button" variant="ghost">
               Back
             </Button>
-            <Button onClick={handleSubmit} type="button">
+            <Button onClick={() => handleFormStep(form)} type="button">
               Continue
             </Button>
           </div>

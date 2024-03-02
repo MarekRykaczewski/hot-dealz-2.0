@@ -8,8 +8,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
+
+interface FormData {
+  link: string;
+}
 
 const dealLinkFormSchema = z.object({
   link: z.string().url({ message: "Invalid URL" }).min(1, {
@@ -18,34 +22,16 @@ const dealLinkFormSchema = z.object({
 });
 
 interface DealLinkFormProps {
-  updateFormData: (formData: { link: string }) => void;
-  currentStep: number;
-  setCurrentStep: (index: number) => void;
+  handleFormStep: (form: UseFormReturn<FormData>) => void;
 }
 
-const DealLinkForm = ({
-  updateFormData,
-  currentStep,
-  setCurrentStep,
-}: DealLinkFormProps) => {
-  const form = useForm({
+const DealLinkForm = ({ handleFormStep }: DealLinkFormProps) => {
+  const form = useForm<FormData>({
     resolver: zodResolver(dealLinkFormSchema),
     defaultValues: {
       link: "",
     },
   });
-
-  const handleSubmit = () => {
-    form.trigger().then((isValid: boolean) => {
-      if (isValid) {
-        const formData = form.getValues();
-        updateFormData(formData);
-        setCurrentStep(currentStep + 1);
-      } else {
-        console.log("Form validation failed");
-      }
-    });
-  };
 
   return (
     <>
@@ -73,7 +59,7 @@ const DealLinkForm = ({
             )}
           />
           <div className="flex items-center gap-x-2">
-            <Button type="button" onClick={handleSubmit}>
+            <Button type="button" onClick={() => handleFormStep(form)}>
               Continue
             </Button>
           </div>

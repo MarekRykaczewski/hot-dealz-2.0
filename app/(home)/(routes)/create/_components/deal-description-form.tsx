@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 
 const DealDescriptionFormSchema = z.object({
@@ -20,34 +20,16 @@ interface FormData {
 }
 
 interface DealDescriptionFormProps {
-  updateFormData: (formData: { description: string }) => void;
-  currentStep: number;
-  setCurrentStep: (index: number) => void;
+  handleFormStep: (form: UseFormReturn<FormData>) => void;
 }
 
-const DealDescriptionForm = ({
-  updateFormData,
-  currentStep,
-  setCurrentStep,
-}: DealDescriptionFormProps) => {
-  const form = useForm({
+const DealDescriptionForm = ({ handleFormStep }: DealDescriptionFormProps) => {
+  const form = useForm<FormData>({
     resolver: zodResolver(DealDescriptionFormSchema),
     defaultValues: {
       description: "",
     },
   });
-
-  const handleSubmit = () => {
-    form.trigger().then((isValid: boolean) => {
-      if (isValid) {
-        const formData = form.getValues() as FormData;
-        updateFormData(formData);
-        setCurrentStep(currentStep + 1);
-      } else {
-        console.log("Form validation failed");
-      }
-    });
-  };
 
   return (
     <>
@@ -63,7 +45,7 @@ const DealDescriptionForm = ({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Deal Descirption</FormLabel>
+                <FormLabel>Deal Description</FormLabel>
                 <FormControl>
                   <Editor {...field} />
                 </FormControl>
@@ -75,7 +57,7 @@ const DealDescriptionForm = ({
             <Button type="button" variant="ghost">
               Back
             </Button>
-            <Button onClick={handleSubmit} type="submit">
+            <Button onClick={() => handleFormStep(form)} type="submit">
               Continue
             </Button>
           </div>
