@@ -31,7 +31,9 @@ const DealCard = ({ deal }: { deal: Deal }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <Link href={`/deals/${deal.id}`}>{title}</Link>
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col">
         <div className="flex gap-2 items-center w-full">
