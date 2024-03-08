@@ -8,7 +8,7 @@ import SearchInput from "./search-input";
 const Navbar = () => {
   const { userId } = auth();
   return (
-    <div className="border-b h-full bg-stone-800 shadow-sm px-4">
+    <div className="h-full bg-stone-800 shadow-sm px-4">
       <div className="flex mx-auto max-w-5xl h-full items-center justify-between">
         <div className="p-6">
           <Link href="/">
