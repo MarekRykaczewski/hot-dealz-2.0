@@ -1,6 +1,9 @@
+"use client";
+
 import { Deal } from "@prisma/client";
-import { Truck } from "lucide-react";
+import { Scissors, Truck } from "lucide-react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -28,6 +31,18 @@ const DealCard = ({ deal }: { deal: Deal }) => {
     price && nextBestPrice
       ? Math.floor((1 - price / nextBestPrice) * 100)
       : null;
+
+  const handleCopyToClipboard = (promoCode: string) => {
+    navigator.clipboard.writeText(promoCode).then(
+      () => {
+        toast.success("Promo code copied to clipboard!");
+      },
+      () => {
+        toast.error("Failed to copy promo code to clipboard.");
+      }
+    );
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -44,11 +59,16 @@ const DealCard = ({ deal }: { deal: Deal }) => {
 
         {promoCode && (
           <div className="mb-2 mt-2 flex gap-3 w-full text-gray-60">
-            <button className="flex overflow-hidden text-ellipsis whitespace-nowrap border-dashed border-2 border-gray-300 hover:bg-gray-100 transition items-center gap-2 justify-center rounded-full w-full h-8">
+            <button
+              onClick={() => handleCopyToClipboard(promoCode)}
+              className="flex overflow-hidden text-ellipsis whitespace-nowrap border-dashed border-2 border-gray-300 hover:bg-gray-100 transition items-center gap-2 justify-center rounded-full w-full h-8"
+            >
               {promoCode}
+              <Scissors size={16} />
             </button>
           </div>
         )}
+
         <div className="flex gap-2 text-gray-500">
           {shippingPrice ? (
             <p>Shipping Price: ${shippingPrice}</p>
