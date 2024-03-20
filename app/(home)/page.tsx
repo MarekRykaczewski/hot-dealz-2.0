@@ -25,7 +25,7 @@ export default async function Home({
     <main className="flex flex-col items-center w-full">
       <FilterCategory />
       <DealsList deals={deals} />
-      <div className="mt-2">
+      <div className="w-full mt-2 p-2 border-t border-gray-200">
         <DealsPagination currentPage={page} totalPages={totalPages} />
       </div>
     </main>

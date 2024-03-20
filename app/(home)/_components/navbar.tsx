@@ -8,8 +8,8 @@ import SearchInput from "./search-input";
 const Navbar = () => {
   const { userId } = auth();
   return (
-    <div className="h-full bg-stone-800 shadow-sm px-4">
-      <div className="flex mx-auto max-w-5xl h-full items-center justify-between">
+    <div className="sticky h-14 z-10 top-0 bg-stone-800 shadow-sm px-4">
+      <div className="flex mx-auto max-w-7xl h-full items-center justify-between">
         <div className="p-6">
           <Link href="/">
             <Logo />
@@ -33,7 +33,11 @@ const Navbar = () => {
           )}
 
           <Link href="/create">
-            <Button className="rounded-full" variant="orange" size="icon">
+            <Button
+              className="rounded-full h-9 w-9"
+              variant="orange"
+              size="icon"
+            >
               <Plus />
             </Button>
           </Link>
@@ -42,7 +46,7 @@ const Navbar = () => {
             <UserButton
               appearance={{
                 elements: {
-                  avatarBox: "h-10 w-10",
+                  avatarBox: "h-9 w-9",
                 },
               }}
               userProfileMode="modal"
