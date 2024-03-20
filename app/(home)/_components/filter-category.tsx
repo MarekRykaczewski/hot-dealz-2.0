@@ -14,14 +14,14 @@ const FilterCategory = async () => {
   const categories = await db.category.findMany();
 
   return (
-    <div className="bg-stone-600 w-full flex justify-center">
-      <Carousel className="flex items-center w-fit py-2">
+    <div className="bg-stone-600 h-16 w-full flex justify-center">
+      <Carousel className="flex items-center justify-center w-fit">
         <CarouselPrevious />
-        <CarouselContent>
+        <CarouselContent className="max-w-7xl">
           {categories.map((category: Category) => (
             <CarouselItem key={category.id} className="basis-1/6">
               <Link href={`/${category.name}`}>
-                <Button variant="orange" className="w-full">
+                <Button variant="orange" className="w-full h-8">
                   {category.name}
                 </Button>
               </Link>
