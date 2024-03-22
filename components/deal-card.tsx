@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { Deal } from "@prisma/client";
 import { Scissors, Truck } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import Vote from "./vote";
 
 const DealCard = ({ deal }: { deal: Deal }) => {
   const {
@@ -20,12 +22,17 @@ const DealCard = ({ deal }: { deal: Deal }) => {
     link,
     description,
     promoCode,
+    score,
     startDate,
     endDate,
     price,
     nextBestPrice,
     shippingPrice,
   } = deal;
+
+  const { user } = useUser();
+
+  const userId = user?.id;
 
   const discountPercentage =
     price && nextBestPrice
@@ -46,6 +53,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
   return (
     <Card>
       <CardHeader>
+        <Vote userId={userId} dealId={deal.id} score={score} />
         <CardTitle>
           <Link href={`/deals/${deal.id}`}>{title}</Link>
         </CardTitle>
