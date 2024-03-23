@@ -19,7 +19,10 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
 
   return (
     <div>
-      <h1>{deal?.title}</h1>
+      <div className="border rounded-lg p-2 mt-4">
+        <h1 className="text-bold text-3xl">{deal?.title}</h1>
+      </div>
+
       <CommentForm dealId={deal.id} />
       <h2>Comments:</h2>
       <div className="flex flex-col gap-2">
