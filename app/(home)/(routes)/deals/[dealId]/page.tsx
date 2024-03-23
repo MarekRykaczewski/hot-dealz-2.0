@@ -1,5 +1,6 @@
 import Comment from "@/components/comment";
 import CommentForm from "@/components/comment-form";
+import NotFound from "@/components/not-found";
 import { db } from "@/lib/db";
 
 const DealPage = async ({ params }: { params: { dealId: string } }) => {
@@ -11,6 +12,10 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
       comments: true,
     },
   });
+
+  if (!deal) {
+    return <NotFound />;
+  }
 
   return (
     <div>
