@@ -1,3 +1,4 @@
+import Comment from "@/components/comment";
 import CommentForm from "@/components/comment-form";
 import { db } from "@/lib/db";
 
@@ -16,11 +17,11 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
       <h1>{deal?.title}</h1>
       <CommentForm dealId={deal.id} />
       <h2>Comments:</h2>
-      <ul>
+      <div className="flex flex-col gap-2">
         {deal?.comments.map((comment) => (
-          <li key={comment.id}>{comment.content}</li>
+          <Comment key={comment.id} comment={comment} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
