@@ -67,13 +67,17 @@ model Comment {
   dealId String
   content String @db.Text
   userId String
+  parentId String?
   createdAt DateTime @default(now())
 
   reactions CommentReaction[]
 
   deal Deal @relation(fields: [dealId], references: [id])
+  parentComment Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  childComments Comment[] @relation("CommentReplies")
 
   @@index([dealId])
+  @@index([parentId])
 }
 
 model CommentReaction {
