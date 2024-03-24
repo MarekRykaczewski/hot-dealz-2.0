@@ -6,7 +6,11 @@ const DealsList = ({ deals }: { deals: Deal[] }) => {
     <div>
       <div className="flex flex-col gap-2 mt-2">
         {deals.map((deal: Deal) => (
-          <DealCard key={deal.id} deal={deal} />
+          <DealCard
+            key={deal.id}
+            deal={deal}
+            commentCount={deal.commentCount}
+          />
         ))}
       </div>
     </div>

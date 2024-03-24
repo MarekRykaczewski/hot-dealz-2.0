@@ -16,10 +16,25 @@ export default async function Home({
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  const deals = await db.deal.findMany({
+  const dealsWithCommentCount = await db.deal.findMany({
     skip: (page - 1) * pageSize,
     take: pageSize,
+    include: {
+      comments: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
+
+  const deals = await Promise.all(
+    dealsWithCommentCount.map(async (deal) => {
+      const commentCount = deal.comments.length;
+      const { comments, ...dealWithoutComments } = deal;
+      return { ...dealWithoutComments, commentCount };
+    })
+  );
 
   return (
     <main className="flex flex-col items-center w-full">

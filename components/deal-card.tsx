@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { Deal } from "@prisma/client";
-import { Scissors, Truck } from "lucide-react";
+import { MessagesSquare, Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button";
@@ -88,9 +88,15 @@ const DealCard = ({ deal }: { deal: Deal }) => {
 
         <CardDescription>{description}</CardDescription>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex justify-between">
         <Link href={link} target="_blank" rel="noopener noreferrer">
           <Button variant="orange">View Deal</Button>
+        </Link>
+        <Link href={`/deals/${deal.id}`}>
+          <Button className="flex gap-2">
+            <MessagesSquare size={18} />
+            {deal.commentCount}
+          </Button>
         </Link>
       </CardFooter>
     </Card>
