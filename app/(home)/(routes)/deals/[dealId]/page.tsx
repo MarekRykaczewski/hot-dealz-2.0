@@ -1,6 +1,7 @@
 import Comment from "@/components/comment";
 import CommentForm from "@/components/comment-form";
 import NotFound from "@/components/not-found";
+import { ShareDeal } from "@/components/share-deal";
 import { db } from "@/lib/db";
 
 interface CommentWithChildren extends Comment {
@@ -50,6 +51,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
     <div>
       <div className="border rounded-lg p-2 mt-4">
         <h1 className="text-bold text-3xl">{deal.title}</h1>
+        <ShareDeal />
       </div>
 
       <CommentForm dealId={deal.id} />
