@@ -48,7 +48,7 @@ export default async function Home({
   );
 
   return (
-    <main className="flex flex-col items-center w-full">
+    <main className="flex flex-col items-center bg-gray-100 w-full">
       <div className="w-full">
         <FilterCategory />
         <SortDeals />
