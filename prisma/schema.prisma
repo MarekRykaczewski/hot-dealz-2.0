@@ -49,6 +49,11 @@ model Category {
   id String @id @default(uuid())
   name String @unique
   deals Deal[]
+  parentCategory Category? @relation("Subcategories", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  parentId String?
+  subcategories Category[] @relation("Subcategories")
+
+  @@index([parentId])
 }
 
 model Vote {
