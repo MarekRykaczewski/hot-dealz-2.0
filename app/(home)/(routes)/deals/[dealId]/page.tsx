@@ -1,3 +1,4 @@
+import CategoryCrumbs from "@/components/category-crumbs";
 import Comment from "@/components/comment";
 import CommentForm from "@/components/comment-form";
 import NotFound from "@/components/not-found";
@@ -48,7 +49,8 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
   }
 
   return (
-    <div>
+    <div className="w-full">
+      <CategoryCrumbs categoryId={deal.categoryId} />
       <div className="border rounded-lg p-2 mt-4">
         <h1 className="text-bold text-3xl">{deal.title}</h1>
         <ShareDeal />
