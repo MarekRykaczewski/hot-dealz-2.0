@@ -32,7 +32,7 @@ const CategoryCrumbs = async ({ categoryId }: { categoryId: string }) => {
   await fetchCategoryHierarchy(categoryId);
 
   return (
-    <Breadcrumb className="bg-stone-700 py-2">
+    <Breadcrumb>
       <BreadcrumbList className="text-white">
         <BreadcrumbItem>
           <BreadcrumbLink
