@@ -47,10 +47,14 @@ export default async function Home({
     })
   );
 
+  const categories = await db.category.findMany();
+
   return (
-    <main className="flex flex-col items-center bg-gray-100 w-full">
-      <div className="w-full">
-        <FilterCategory />
+    <main className="flex w-full flex-col items-center bg-gray-100">
+      <div className="relative px-6 w-full flex items-center bg-stone-600 h-16">
+        <FilterCategory categories={categories} />
+      </div>
+      <div className="flex font-semibold text-gray-500 w-full px-6 gap-4 py-3 items-center justify-start bg-white border-b ">
         <SortDeals />
       </div>
       <DealsList deals={deals} />

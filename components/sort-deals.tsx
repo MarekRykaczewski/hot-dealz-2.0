@@ -8,7 +8,7 @@ const SortDeals = () => {
   const sort_by = searchParams.get("sort_by");
 
   return (
-    <div className="flex gap-2 py-3 items-center justify-start bg-white border-b ">
+    <>
       <Link href={{ pathname: "/", query: { sort_by: "score" } }} passHref>
         <button
           className={
@@ -31,7 +31,7 @@ const SortDeals = () => {
           Comments
         </button>
       </Link>
-    </div>
+    </>
   );
 };
 
