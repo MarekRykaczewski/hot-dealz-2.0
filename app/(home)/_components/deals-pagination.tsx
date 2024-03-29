@@ -9,6 +9,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface DealsPaginationProps {
   currentPage: number;
@@ -17,13 +18,35 @@ interface DealsPaginationProps {
 
 const DealsPagination = ({ currentPage, totalPages }: DealsPaginationProps) => {
   const router = useRouter();
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+
+      const threshold = documentHeight / 2 - windowHeight / 2;
+      setIsVisible(scrollTop > threshold);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const goToPage = (page: number) => {
     router.push(`/?page=${page}`);
   };
 
   return (
-    <Pagination>
+    <Pagination
+      className={`fixed bottom-0 left-0 right-0 border-t py-2 bg-white z-10 transition-opacity duration-300 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <PaginationContent>
         <PaginationItem>
           <button

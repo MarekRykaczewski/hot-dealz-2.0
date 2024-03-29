@@ -11,7 +11,7 @@ export default async function Home({
   searchParams?: ParsedUrlQuery;
 }) {
   const page = parseInt(searchParams?.["page"] as string) || 1;
-  const pageSize = parseInt(searchParams?.["per_page"] as string) || 3;
+  const pageSize = parseInt(searchParams?.["per_page"] as string) || 10;
   const sortBy = (searchParams?.["sort_by"] as string) || "score";
 
   const totalCount = await db.deal.count();
@@ -62,7 +62,7 @@ export default async function Home({
         </div>
       </div>
       <DealsList deals={deals} />
-      <div className="w-full mt-2 p-2 border-t border-gray-200">
+      <div className="w-full">
         <DealsPagination currentPage={page} totalPages={totalPages} />
       </div>
     </main>
