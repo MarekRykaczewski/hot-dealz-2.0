@@ -51,11 +51,15 @@ export default async function Home({
 
   return (
     <main className="flex w-full flex-col items-center bg-gray-100">
-      <div className="relative px-6 w-full flex items-center bg-stone-600 h-16">
-        <FilterCategory categories={categories} />
+      <div className="relative px-6 w-full flex justify-center items-center bg-stone-600 h-16">
+        <div className="lg:w-[60vw] w-full">
+          <FilterCategory categories={categories} />
+        </div>
       </div>
-      <div className="flex font-semibold text-gray-500 w-full px-6 gap-4 py-3 items-center justify-start bg-white border-b ">
-        <SortDeals />
+      <div className="flex font-semibold justify-center text-gray-500 w-full py-3 items-center bg-white border-b ">
+        <div className="flex gap-4 lg:w-[60vw] px-6 w-full">
+          <SortDeals />
+        </div>
       </div>
       <DealsList deals={deals} />
       <div className="w-full mt-2 p-2 border-t border-gray-200">
