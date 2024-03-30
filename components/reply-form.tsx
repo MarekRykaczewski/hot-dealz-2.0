@@ -30,8 +30,9 @@ const ReplyForm = ({ parentId, dealId }: ReplyFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="flex w-full items-center gap-2" onSubmit={handleSubmit}>
       <textarea
+        className="border p-2 w-full rounded-lg"
         value={content}
         onChange={handleChange}
         placeholder="Write your reply..."

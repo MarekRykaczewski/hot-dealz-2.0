@@ -15,7 +15,7 @@ const Comment = ({ comment }: { comment: Comment }) => {
   };
 
   return (
-    <div className="border p-2 rounded-lg" key={comment.id}>
+    <div className="border bg-white p-2 rounded-lg" key={comment.id}>
       <div className="flex">
         <Image
           className="row-span-2"
