@@ -8,6 +8,7 @@ import { UseFormReturn } from "react-hook-form";
 import toast from "react-hot-toast";
 import DealDescriptionForm from "./deal-description-form";
 import DealFinalForm from "./deal-final-form";
+import DealImageForm from "./deal-image-form";
 import DealInfo from "./deal-info-form";
 import DealLinkForm from "./deal-link-form";
 import Review from "./review";
@@ -69,7 +70,7 @@ const DealForm = ({ categories }: DealFormProps) => {
       <div className="flex flex-col mb-[25vh] p-6 w-full items-center justify-center">
         {currentStep === 0 && <DealLinkForm handleFormStep={handleFormStep} />}
         {currentStep === 1 && <DealInfo handleFormStep={handleFormStep} />}
-        {currentStep === 2 && <div> TODO </div>}
+        {currentStep === 2 && <DealImageForm handleFormStep={handleFormStep} />}
         {currentStep === 3 && (
           <DealDescriptionForm handleFormStep={handleFormStep} />
         )}
