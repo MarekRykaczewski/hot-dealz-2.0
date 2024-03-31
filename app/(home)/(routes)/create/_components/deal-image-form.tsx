@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -17,17 +17,24 @@ interface FormData {
 
 interface DealImageFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  formData: FormData;
 }
 
-const DealImageForm = ({ handleFormStep }: DealImageFormProps) => {
+const DealImageForm = ({ handleFormStep, formData }: DealImageFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(DealImageFormSchema),
     defaultValues: {
-      imageUrl: "",
+      imageUrl: formData.imageUrl,
     },
   });
+
+  useEffect(() => {
+    if (formData.imageUrl) {
+      setImagePreview(formData.imageUrl);
+    }
+  }, [formData.imageUrl]);
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

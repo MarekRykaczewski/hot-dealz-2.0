@@ -37,15 +37,15 @@ interface DealInfoProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
 }
 
-const DealInfo = ({ handleFormStep }: DealInfoProps) => {
+const DealInfo = ({ handleFormStep, formData }: DealInfoProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(dealInfoSchema),
     defaultValues: {
-      title: "",
-      price: 0,
-      nextBestPrice: 0,
-      promoCode: "",
-      shippingCost: 0,
+      title: formData.title,
+      price: formData.price,
+      nextBestPrice: formData.nextBestPrice,
+      promoCode: formData.promoCode,
+      shippingCost: formData.shippingCost,
     },
   });
 

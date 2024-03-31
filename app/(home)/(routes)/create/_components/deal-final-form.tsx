@@ -32,13 +32,17 @@ interface DealFinalFormProps {
   }[];
 }
 
-const DealFinalForm = ({ handleFormStep, options }: DealFinalFormProps) => {
+const DealFinalForm = ({
+  handleFormStep,
+  options,
+  formData,
+}: DealFinalFormProps) => {
   const form = useForm({
     resolver: zodResolver(DealFinalFormSchema),
     defaultValues: {
-      startDate: new Date(),
-      endDate: new Date(),
-      categoryId: "",
+      startDate: formData.startDate,
+      endDate: formData.endDate,
+      categoryId: formData.categoryId,
     },
   });
 

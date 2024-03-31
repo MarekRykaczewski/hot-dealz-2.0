@@ -23,13 +23,14 @@ const dealLinkFormSchema = z.object({
 
 interface DealLinkFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  formData: FormData;
 }
 
-const DealLinkForm = ({ handleFormStep }: DealLinkFormProps) => {
+const DealLinkForm = ({ handleFormStep, formData }: DealLinkFormProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(dealLinkFormSchema),
     defaultValues: {
-      link: "",
+      link: formData.link,
     },
   });
 

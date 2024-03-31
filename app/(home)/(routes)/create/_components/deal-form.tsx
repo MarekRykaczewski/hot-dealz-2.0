@@ -60,6 +60,40 @@ const DealForm = ({ categories }: DealFormProps) => {
     }
   };
 
+  const renderStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <DealLinkForm handleFormStep={handleFormStep} formData={formData} />
+        );
+      case 1:
+        return <DealInfo handleFormStep={handleFormStep} formData={formData} />;
+      case 2:
+        return (
+          <DealImageForm handleFormStep={handleFormStep} formData={formData} />
+        );
+      case 3:
+        return (
+          <DealDescriptionForm
+            handleFormStep={handleFormStep}
+            formData={formData}
+          />
+        );
+      case 4:
+        return (
+          <DealFinalForm
+            handleFormStep={handleFormStep}
+            options={categories}
+            formData={formData}
+          />
+        );
+      case 5:
+        return <Review onSubmit={onSubmit} formData={formData} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex w-full">
       <SideBar
@@ -68,18 +102,7 @@ const DealForm = ({ categories }: DealFormProps) => {
         setCurrentStep={setCurrentStep}
       />
       <div className="flex flex-col mb-[25vh] p-6 w-full items-center justify-center">
-        {currentStep === 0 && <DealLinkForm handleFormStep={handleFormStep} />}
-        {currentStep === 1 && <DealInfo handleFormStep={handleFormStep} />}
-        {currentStep === 2 && <DealImageForm handleFormStep={handleFormStep} />}
-        {currentStep === 3 && (
-          <DealDescriptionForm handleFormStep={handleFormStep} />
-        )}
-        {currentStep === 4 && (
-          <DealFinalForm handleFormStep={handleFormStep} options={categories} />
-        )}
-        {currentStep === 5 && (
-          <Review onSubmit={onSubmit} formData={formData} />
-        )}
+        {renderStep()}
       </div>
     </div>
   );

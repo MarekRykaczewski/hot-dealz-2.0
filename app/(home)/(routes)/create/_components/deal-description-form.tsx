@@ -23,11 +23,14 @@ interface DealDescriptionFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
 }
 
-const DealDescriptionForm = ({ handleFormStep }: DealDescriptionFormProps) => {
+const DealDescriptionForm = ({
+  handleFormStep,
+  formData,
+}: DealDescriptionFormProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(DealDescriptionFormSchema),
     defaultValues: {
-      description: "",
+      description: formData.description,
     },
   });
 
