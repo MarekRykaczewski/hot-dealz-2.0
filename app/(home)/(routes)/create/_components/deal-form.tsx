@@ -88,7 +88,13 @@ const DealForm = ({ categories }: DealFormProps) => {
           />
         );
       case 5:
-        return <Review onSubmit={onSubmit} formData={formData} />;
+        return (
+          <Review
+            onSubmit={onSubmit}
+            formData={formData}
+            categories={categories}
+          />
+        );
       default:
         return null;
     }
