@@ -20,7 +20,11 @@ interface DealImageFormProps {
   formData: FormData;
 }
 
-const DealImageForm = ({ handleFormStep, formData }: DealImageFormProps) => {
+const DealImageForm = ({
+  handleFormStep,
+  formData,
+  setSelectedFile,
+}: DealImageFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const form = useForm<FormData>({
@@ -46,6 +50,7 @@ const DealImageForm = ({ handleFormStep, formData }: DealImageFormProps) => {
         form.setValue("imageUrl", imageUrl);
       };
       reader.readAsDataURL(file);
+      setSelectedFile(file);
     }
   };
   return (

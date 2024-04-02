@@ -1,5 +1,6 @@
 "use client";
 
+import { uploadFiles } from "@/lib/uploadthing";
 import { Category } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ const DealForm = ({ categories }: DealFormProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
   const [formCompletion, setFormCompletion] = useState(Array(5).fill(false));
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const router = useRouter();
 
@@ -52,9 +54,30 @@ const DealForm = ({ categories }: DealFormProps) => {
 
   const onSubmit = async () => {
     try {
-      const response = await axios.post("/api/deals", formData);
-      router.push(`/deals/${response.data.id}`);
-      toast.success("Deal Created!");
+      // Upload image only if it exists
+      if (selectedFile) {
+        const uploadResponse = await uploadFiles("dealImageUploader", {
+          files: [selectedFile],
+        });
+
+        const uploadedImageUrl = uploadResponse[0].url;
+
+        // Update formData with the uploaded image URL
+        const formDataWithImage = {
+          ...formData,
+          imageUrls: [uploadedImageUrl],
+        };
+
+        // Submit the form data with the uploaded image
+        const response = await axios.post("/api/deals", formDataWithImage);
+        router.push(`/deals/${response.data.id}`);
+        toast.success("Deal Created!");
+      } else {
+        // Submit the form data without the image
+        const response = await axios.post("/api/deals", formData);
+        router.push(`/deals/${response.data.id}`);
+        toast.success("Deal Created!");
+      }
     } catch {
       toast.error("Something went wrong");
     }
@@ -70,7 +93,11 @@ const DealForm = ({ categories }: DealFormProps) => {
         return <DealInfo handleFormStep={handleFormStep} formData={formData} />;
       case 2:
         return (
-          <DealImageForm handleFormStep={handleFormStep} formData={formData} />
+          <DealImageForm
+            handleFormStep={handleFormStep}
+            formData={formData}
+            setSelectedFile={setSelectedFile}
+          />
         );
       case 3:
         return (
