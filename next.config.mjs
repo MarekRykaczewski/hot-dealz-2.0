@@ -1,7 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["st.depositphotos.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "loremflickr.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "st.depositphotos.com",
+        pathname: "**",
+      },
+    ],
   },
 };
 
