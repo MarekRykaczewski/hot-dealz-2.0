@@ -5,6 +5,7 @@ import { Deal } from "@prisma/client";
 import { Clock, MessagesSquare, Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import DealImageCarousel from "./deal-image-carousel";
 import { Button } from "./ui/button";
 import Vote from "./vote";
 
@@ -46,8 +47,8 @@ const DealCard = ({ deal }: { deal: Deal }) => {
     <div
       className={`w-full shadow-md bg-white p-4 rounded-xl flex flex-col sm:flex-row sm:justify-between`}
     >
-      <div className="h-64 sm:w-64 bg-red-200 overflow-hidden rounded-xl">
-        {/* TODO: Deal Image */}
+      <div className="h-64 sm:w-64 bg-gray-100 border overflow-hidden rounded-xl">
+        <DealImageCarousel imageUrls={deal.imageUrls} />
       </div>
       <div className="bg-white flex-grow sm:px-4 px-0 py-4 sm:py-0 flex flex-col justify-between">
         <div className="flex flex-col gap-1">

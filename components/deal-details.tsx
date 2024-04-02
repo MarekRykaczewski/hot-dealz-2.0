@@ -3,6 +3,7 @@
 import { Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import DealImageCarousel from "./deal-image-carousel";
 import { ShareDeal } from "./share-deal";
 import { Button } from "./ui/button";
 import Vote from "./vote";
@@ -26,8 +27,8 @@ const DealDetails = ({ deal }) => {
 
   return (
     <>
-      <div className="max-h-96 sm:w-2/5 mr-3 bg-red-200 overflow-hidden rounded-xl">
-        {/* TODO: Deal Image */}
+      <div className="max-h-96 sm:w-2/5 mr-3 bg-gray-100 border overflow-hidden rounded-xl">
+        <DealImageCarousel imageUrls={deal.imageUrls} />
       </div>
       <div className="bg-white flex-grow px-0 flex flex-col justify-between">
         <div className="flex flex-col gap-1">
