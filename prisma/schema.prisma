@@ -31,6 +31,7 @@ model Deal {
   
   comments Comment[]
   votes Vote[]
+  savedBy SavedDeal[]
 
   startDate DateTime?
   endDate DateTime?
@@ -43,6 +44,16 @@ model Deal {
   updatedAt DateTime @updatedAt
 
   @@index([categoryId])
+}
+
+model SavedDeal {
+  id String @id @default(uuid())
+  userId String
+  deal Deal @relation(fields: [dealId], references: [id])
+  dealId String
+
+  @@unique([userId, dealId])
+  @@index([dealId])
 }
 
 model Category {

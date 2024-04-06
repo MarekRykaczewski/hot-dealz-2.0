@@ -6,6 +6,7 @@ import { Clock, MessagesSquare, Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import DealImageCarousel from "./deal-image-carousel";
+import SavedDealButton from "./saved-deal-button";
 import { Button } from "./ui/button";
 import Vote from "./vote";
 
@@ -109,12 +110,15 @@ const DealCard = ({ deal }: { deal: Deal }) => {
           <Link href={link} target="_blank" rel="noopener noreferrer">
             <Button variant="orange">View Deal</Button>
           </Link>
-          <Link href={`/deals/${deal.id}`}>
-            <Button className="flex gap-2">
-              <MessagesSquare size={18} />
-              {deal.commentCount}
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            {<SavedDealButton dealId={deal.id} />}{" "}
+            <Link href={`/deals/${deal.id}`}>
+              <Button className="flex gap-2">
+                <MessagesSquare size={18} />
+                {deal.commentCount}
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
