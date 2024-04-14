@@ -13,17 +13,19 @@ const FilterCategory = ({ categories }: { categories: Category[] }) => {
     }
   };
 
-  const categoriesMap = categories.map((category) => (
-    <Link
-      className="flex-shrink-0 w-fit"
-      key={category.name}
-      href={`/category/${encodeURIComponent(category.name)}`}
-    >
-      <button className="flex text-md leading-6 gap-1 h-10 min-w-fit w-[150px] px-2 items-center justify-center bg-orange-600 rounded-lg text-white font-semibold hover:bg-orange-500 transition">
-        {category.name}
-      </button>
-    </Link>
-  ));
+  const categoriesMap = categories
+    ? categories.map((category) => (
+        <Link
+          className="flex-shrink-0 w-fit"
+          key={category.name}
+          href={`/category/${encodeURIComponent(category.name)}`}
+        >
+          <button className="flex text-md leading-6 gap-1 h-10 min-w-fit w-[150px] px-2 items-center justify-center bg-orange-600 rounded-lg text-white font-semibold hover:bg-orange-500 transition">
+            {category.name}
+          </button>
+        </Link>
+      ))
+    : null;
 
   const onScrollLeftClick = () => scroll(-150);
   const onScrollRightClick = () => scroll(150);
