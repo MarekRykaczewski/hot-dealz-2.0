@@ -1,6 +1,9 @@
+import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
 import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs";
+import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import DealsPagination from "./_components/deals-pagination";
 import FilterCategory from "./_components/filter-category";
@@ -49,8 +52,14 @@ export default async function Home({
 
   const categories = await db.category.findMany();
 
+  const { userId } = auth();
+
+  const hasDatabaseUser = !!(
+    userId && (await db.user.findUnique({ where: { clerkId: userId } }))
+  );
+
   return (
-    <main className="flex w-full flex-col items-center bg-gray-100">
+    <main className="relative flex w-full flex-col items-center bg-gray-100">
       <div className="relative px-6 w-full flex justify-center items-center bg-stone-600 h-16">
         <div className="lg:w-[60vw] w-full">
           <FilterCategory categories={categories} />
@@ -60,6 +69,18 @@ export default async function Home({
         <div className="flex gap-4 lg:w-[60vw] px-6 w-full">
           <SortDeals />
         </div>
+      </div>
+      <div className="mt-2">
+        {userId && !hasDatabaseUser ? (
+          <Link href={"/finish-account-setup"}>
+            <AlertBanner
+              title={"Heads up!"}
+              message={
+                "In order to post and interact you should setup a username"
+              }
+            />
+          </Link>
+        ) : null}
       </div>
       <DealsList deals={deals} />
       <div className="w-full">
