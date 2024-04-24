@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import DealImageCarousel from "./deal-image-carousel";
 import SavedDealButton from "./saved-deal-button";
 import { Button } from "./ui/button";
+import UserProfileLink from "./user-profile-link";
 import Vote from "./vote";
 
 const DealCard = ({ deal }: { deal: Deal }) => {
@@ -23,6 +24,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
     nextBestPrice,
     shippingPrice,
     userId: posterUserId,
+    user: posterUser,
   } = deal;
 
   const { user } = useUser();
@@ -108,15 +110,10 @@ const DealCard = ({ deal }: { deal: Deal }) => {
           </p>
         </div>
         <div className="flex justify-between">
-          <Link
-            className="flex items-center gap-2"
-            href={`profile/${posterUserId}`}
-          >
-            <div className="bg-red-300 flex items-center justify-center rounded-full h-10 w-10">
-              <span>M</span>
-            </div>
-            <span>Username</span>
-          </Link>
+          <UserProfileLink
+            posterUserId={posterUserId}
+            username={posterUser.username}
+          />
           <div className="flex gap-2">
             <SavedDealButton dealId={deal.id} />
             <Link href={`/deals/${deal.id}`}>

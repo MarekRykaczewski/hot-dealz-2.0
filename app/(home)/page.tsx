@@ -38,6 +38,7 @@ export default async function Home({
           id: true,
         },
       },
+      user: true,
     },
     orderBy,
   });
