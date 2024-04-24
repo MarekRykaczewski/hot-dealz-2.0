@@ -22,6 +22,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
     price,
     nextBestPrice,
     shippingPrice,
+    userId: posterUserId,
   } = deal;
 
   const { user } = useUser();
@@ -107,16 +108,25 @@ const DealCard = ({ deal }: { deal: Deal }) => {
           </p>
         </div>
         <div className="flex justify-between">
-          <Link href={link} target="_blank" rel="noopener noreferrer">
-            <Button variant="orange">View Deal</Button>
+          <Link
+            className="flex items-center gap-2"
+            href={`profile/${posterUserId}`}
+          >
+            <div className="bg-red-300 flex items-center justify-center rounded-full h-10 w-10">
+              <span>M</span>
+            </div>
+            <span>Username</span>
           </Link>
           <div className="flex gap-2">
-            {<SavedDealButton dealId={deal.id} />}{" "}
+            <SavedDealButton dealId={deal.id} />
             <Link href={`/deals/${deal.id}`}>
               <Button className="flex gap-2">
                 <MessagesSquare size={18} />
                 {deal.commentCount}
               </Button>
+            </Link>
+            <Link href={link} target="_blank" rel="noopener noreferrer">
+              <Button variant="orange">View Deal</Button>
             </Link>
           </div>
         </div>
