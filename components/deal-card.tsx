@@ -110,10 +110,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
           </p>
         </div>
         <div className="flex justify-between">
-          <UserProfileLink
-            posterUserId={posterUserId}
-            username={posterUser.username}
-          />
+          <UserProfileLink username={posterUser.username} />
           <div className="flex gap-2">
             <SavedDealButton dealId={deal.id} />
             <Link href={`/deals/${deal.id}`}>

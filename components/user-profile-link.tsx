@@ -2,15 +2,9 @@
 
 import Link from "next/link";
 
-const UserProfileLink = ({
-  posterUserId,
-  username,
-}: {
-  posterUserId: string;
-  username: string;
-}) => {
+const UserProfileLink = ({ username }: { username: string }) => {
   return (
-    <Link className="flex items-center gap-2" href={`profile/${posterUserId}`}>
+    <Link className="flex items-center gap-2" href={`profile/${username}`}>
       <div className="bg-gray-300 flex items-center justify-center rounded-full h-10 w-10">
         <span>{username.charAt(0).toUpperCase()}</span>
       </div>
