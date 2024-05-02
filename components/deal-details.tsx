@@ -40,11 +40,9 @@ const DealDetails = ({ deal }) => {
             Published {deal.createdAt.toDateString()}
           </span>
 
-          <Link href={`/deals/${deal.id}`}>
-            <div className="text-gray-900 mb-4 w-full overflow-hidden text-ellipsis whitespace-nowrap font-semibold text-3xl hover:text-orange-500 transition">
-              {deal.title}
-            </div>
-          </Link>
+          <div className="text-gray-900 mb-4 w-full overflow-hidden text-ellipsis whitespace-nowrap font-semibold text-3xl">
+            {deal.title}
+          </div>
 
           <div className="flex gap-2 items-center w-full">
             <p className="text-orange-500 text-3xl font-bold">{deal.price}zł</p>
