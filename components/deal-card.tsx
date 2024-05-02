@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { Deal } from "@prisma/client";
 import { Clock, MessagesSquare, Scissors, Truck } from "lucide-react";
@@ -25,6 +26,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
     shippingPrice,
     userId: posterUserId,
     user: posterUser,
+    isPublished,
   } = deal;
 
   const { user } = useUser();
@@ -49,7 +51,10 @@ const DealCard = ({ deal }: { deal: Deal }) => {
 
   return (
     <div
-      className={`w-full shadow-md bg-white p-4 rounded-xl flex flex-col sm:flex-row sm:justify-between`}
+      className={cn(
+        "w-full shadow-md bg-white p-4 rounded-xl flex flex-col sm:flex-row sm:justify-between",
+        !deal.isPublished && "grayscale"
+      )}
     >
       <div className="h-64 sm:w-64 bg-gray-100 border overflow-hidden rounded-xl">
         <DealImageCarousel imageUrls={deal.imageUrls} />
