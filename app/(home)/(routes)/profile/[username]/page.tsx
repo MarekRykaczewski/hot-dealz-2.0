@@ -15,7 +15,7 @@ const ProfilePage = async ({ params }) => {
   });
 
   const userDeals = await db.deal.findMany({
-    where: { userId: user.id },
+    where: { userId: user?.clerkId },
     include: {
       user: true,
     },

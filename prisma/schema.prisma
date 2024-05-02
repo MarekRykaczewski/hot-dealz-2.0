@@ -57,7 +57,7 @@ model Deal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [clerkId])
 
   @@index([categoryId])
   @@index([userId])
@@ -68,7 +68,7 @@ model SavedDeal {
   userId String
   dealId String
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [clerkId])
   deal Deal @relation(fields: [dealId], references: [id])
 
   @@unique([userId, dealId])
@@ -93,7 +93,7 @@ model Vote {
   voteValue Int // +1 for upvote, -1 for downvote
 
   deal Deal @relation(fields: [dealId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [clerkId])
 
   @@index([dealId])
   @@index([userId])
@@ -113,7 +113,7 @@ model Comment {
   parentComment Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   childComments Comment[] @relation("CommentReplies")
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [clerkId])
 
   @@index([dealId])
   @@index([parentId])
@@ -127,7 +127,7 @@ model CommentReaction {
   reaction String   // "like", "funny", "helpful"
 
   comment Comment @relation(fields: [commentId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [clerkId])
 
   @@index([commentId])
   @@index([userId])
