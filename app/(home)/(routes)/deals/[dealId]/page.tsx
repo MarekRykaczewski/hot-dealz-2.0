@@ -3,8 +3,10 @@ import Comment from "@/components/comment";
 import CommentForm from "@/components/comment-form";
 import CommentSort from "@/components/comment-sort";
 import DealDetails from "@/components/deal-details";
+import DealOwnerBanner from "@/components/deal-owner-banner";
 import NotFound from "@/components/not-found";
 import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs";
 
 interface CommentWithChildren extends Comment {
   childComments: CommentWithChildren[];
@@ -45,6 +47,10 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
     ));
   };
 
+  const { userId } = auth();
+
+  const isDealOwner = deal.userId === userId;
+
   if (!deal) {
     return <NotFound />;
   }
@@ -55,6 +61,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
         <CategoryCrumbs categoryId={deal.categoryId} />
       </div>
       <div className="flex flex-col gap-3 mx-auto py-2 sm:px-2 sm:w-full lg:w-[45vw]">
+        {isDealOwner && <DealOwnerBanner />}
         <div className="flex bg-white rounded-lg p-6">
           <DealDetails deal={deal} />
         </div>
