@@ -7,6 +7,7 @@ import DealOwnerBanner from "@/components/deal-owner-banner";
 import NotFound from "@/components/not-found";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
+import { AlertCircle } from "lucide-react";
 
 interface CommentWithChildren extends Comment {
   childComments: CommentWithChildren[];
@@ -61,7 +62,13 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
         <CategoryCrumbs categoryId={deal.categoryId} />
       </div>
       <div className="flex flex-col gap-3 mx-auto py-2 sm:px-2 sm:w-full lg:w-[45vw]">
-        {isDealOwner && <DealOwnerBanner />}
+        {isDealOwner && <DealOwnerBanner isPublished={deal.isPublished} />}
+        {!deal.isPublished && (
+          <div className="rounded-lg flex items-center justify-center gap-2 bg-red-100 p-4 text-red-700 text-lg ">
+            <AlertCircle />
+            <span>Unfortunately this deal has expired</span>
+          </div>
+        )}
         <div className="flex bg-white rounded-lg p-6">
           <DealDetails deal={deal} />
         </div>
