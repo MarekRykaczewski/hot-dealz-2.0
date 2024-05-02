@@ -37,6 +37,9 @@ const Vote = ({ userId, dealId, score }: VoteProps) => {
     try {
       if (!userId || userVote) return;
 
+      // Optimistically update UI
+      setUserVote(voteType);
+
       const response = await axios.post("/api/votes", {
         userId,
         dealId,
@@ -50,8 +53,12 @@ const Vote = ({ userId, dealId, score }: VoteProps) => {
       setUserVote(voteType);
     } catch (error) {
       console.error("Error creating vote:", error);
+      setUserVote(null);
     }
   };
+
+  const scoreOffset = userVote === "like" ? 1 : -1;
+  const OptimisticScore = score + scoreOffset;
 
   return (
     <div className="relative flex justify-between items-center gap-2 rounded-l-full rounded-r-full border w-fit h-8 py-4">
@@ -74,7 +81,7 @@ const Vote = ({ userId, dealId, score }: VoteProps) => {
             : "text-orange-500"
         } drop-shadow-md`}
       >
-        {score}°
+        {OptimisticScore}°
       </span>
       <button
         onClick={() => handleVoteClick("like")}
