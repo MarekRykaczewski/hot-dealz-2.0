@@ -18,7 +18,7 @@ const dealInfoSchema = z
     price: z.coerce.number().positive(),
     nextBestPrice: z.coerce.number().positive(),
     promoCode: z.string().optional(),
-    shippingCost: z.coerce.number(),
+    shippingPrice: z.coerce.number(),
   })
   .refine((data) => data.price < data.nextBestPrice, {
     message: "Price must be smaller than next best price",
@@ -30,7 +30,7 @@ interface FormData {
   price: number;
   nextBestPrice: number;
   promoCode?: string;
-  shippingCost: number;
+  shippingPrice: number;
 }
 
 interface DealInfoProps {
@@ -45,7 +45,7 @@ const DealInfo = ({ handleFormStep, formData }: DealInfoProps) => {
       price: formData.price,
       nextBestPrice: formData.nextBestPrice,
       promoCode: formData.promoCode,
-      shippingCost: formData.shippingCost,
+      shippingPrice: formData.shippingPrice,
     },
   });
 
@@ -156,7 +156,7 @@ const DealInfo = ({ handleFormStep, formData }: DealInfoProps) => {
 
           <FormField
             control={form.control}
-            name="shippingCost"
+            name="shippingPrice"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Shipping Cost</FormLabel>
