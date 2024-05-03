@@ -1,10 +1,8 @@
-import DealsList from "@/components/deals-list";
+import ProfileTabs from "@/components/profile-tabs";
 import { db } from "@/lib/db";
 
 const ProfilePage = async ({ params }) => {
   const { username } = params;
-
-  console.log(username);
 
   const user = await db.user.findUnique({
     where: { username },
@@ -21,6 +19,25 @@ const ProfilePage = async ({ params }) => {
     },
   });
 
+  const savedDeals = await db.savedDeal.findMany({
+    where: {
+      userId: user?.clerkId,
+    },
+  });
+
+  const savedDealIds = savedDeals.map((savedDeal) => savedDeal.dealId);
+
+  const userSavedDeals = await db.deal.findMany({
+    where: {
+      id: {
+        in: savedDealIds,
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
+
   const memberSince = user.createdAt.toDateString();
   const numDeals = user.deals.length;
   const numComments = user.comments.length;
@@ -30,8 +47,8 @@ const ProfilePage = async ({ params }) => {
   }
 
   return (
-    <div className="w-full px-4 mt-20">
-      <div className="relative flex flex-col items-center p-10 bg-stone-100 rounded-xl w-full">
+    <div className="w-full flex flex-col items-center mt-20">
+      <div className="relative flex flex-col items-center p-10 bg-stone-100 rounded-xl w-[97vw]">
         <div className="bg-gray-300 absolute top-[-25%] text-3xl flex items-center justify-center rounded-full h-20 w-20">
           <span>{username.charAt(0).toUpperCase()}</span>
         </div>
@@ -44,11 +61,7 @@ const ProfilePage = async ({ params }) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-around bg-stone-100 rounded-xl mt-4 pb-2 w-full">
-        <div>
-          <DealsList deals={userDeals} />
-        </div>
-      </div>
+      <ProfileTabs userDeals={userDeals} userSavedDeals={userSavedDeals} />
     </div>
   );
 };
