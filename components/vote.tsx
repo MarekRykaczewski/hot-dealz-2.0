@@ -57,7 +57,7 @@ const Vote = ({ userId, dealId, score }: VoteProps) => {
     }
   };
 
-  const scoreOffset = userVote === "like" ? 1 : -1;
+  const scoreOffset = userVote === "like" ? 1 : userVote === "dislike" ? -1 : 0;
   const OptimisticScore = score + scoreOffset;
 
   return (
