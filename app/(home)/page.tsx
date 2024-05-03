@@ -51,7 +51,9 @@ export default async function Home({
     })
   );
 
-  const categories = await db.category.findMany();
+  const categories = await db.category.findMany({
+    where: { parentId: null },
+  });
 
   const { userId } = auth();
 
