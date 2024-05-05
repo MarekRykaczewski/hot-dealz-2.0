@@ -1,5 +1,5 @@
 import CategoryCrumbs from "@/components/category-crumbs";
-import Comment from "@/components/comment";
+import CommentCard from "@/components/comment-card";
 import CommentForm from "@/components/comment-form";
 import CommentSort from "@/components/comment-sort";
 import DealDetails from "@/components/deal-details";
@@ -21,8 +21,10 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
     include: {
       comments: {
         include: {
+          user: true,
           childComments: {
             include: {
+              user: true,
               childComments: true,
             },
           },
@@ -40,7 +42,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
   ) => {
     return comments.map((comment: CommentWithChildren) => (
       <div key={comment.id} style={{ marginLeft: nestingLevel * 10 }}>
-        <Comment comment={comment} />
+        <CommentCard comment={comment} />
         {comment.childComments &&
           comment.childComments.length > 0 &&
           renderComments(comment.childComments, nestingLevel + 1)}

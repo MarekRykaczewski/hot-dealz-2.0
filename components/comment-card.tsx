@@ -2,12 +2,12 @@
 
 import { Comment } from "@prisma/client";
 import { Reply, ThumbsUp } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import ReplyForm from "./reply-form";
 import { Button } from "./ui/button";
+import UserProfileLink from "./user-profile-link";
 
-const Comment = ({ comment }: { comment: Comment }) => {
+const CommentCard = ({ comment }: { comment: Comment }) => {
   const [replying, setReplying] = useState(false);
 
   const toggleReply = () => {
@@ -16,18 +16,10 @@ const Comment = ({ comment }: { comment: Comment }) => {
 
   return (
     <div className="border bg-white p-2 rounded-lg" key={comment.id}>
-      <div className="flex">
-        <Image
-          className="row-span-2"
-          src={comment.profilePictureUrl}
-          alt="Profile"
-        />
-        <div className="flex flex-col">
-          <h1>Author</h1>
-          <span className="text-gray-500"> 15 min</span>
-        </div>
+      <div className="flex justify-between">
+        <UserProfileLink username={comment.user.username} />
       </div>
-      <div>
+      <div className="px-1 py-3">
         <p>{comment.content}</p>
       </div>
       <div className="flex gap-2">
@@ -44,4 +36,4 @@ const Comment = ({ comment }: { comment: Comment }) => {
   );
 };
 
-export default Comment;
+export default CommentCard;
