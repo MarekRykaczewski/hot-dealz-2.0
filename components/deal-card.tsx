@@ -7,6 +7,7 @@ import { Clock, MessagesSquare, Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import DealImageCarousel from "./deal-image-carousel";
+import Preview from "./preview";
 import SavedDealButton from "./saved-deal-button";
 import { Button } from "./ui/button";
 import UserProfileLink from "./user-profile-link";
@@ -108,11 +109,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
             </div>
           )}
 
-          <p
-            className={`text-gray-700 w-full overflow-hidden whitespace-nowrap text-ellipsis mb-3`}
-          >
-            {description}
-          </p>
+          <Preview value={description} />
         </div>
         <div className="flex justify-between">
           <UserProfileLink username={posterUser.username} />

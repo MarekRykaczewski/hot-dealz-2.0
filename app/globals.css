@@ -74,3 +74,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.ql-editor {
+  padding: 0 !important;
+}
+
+.ql-container {
+  font-size: 16px !important;
+}
