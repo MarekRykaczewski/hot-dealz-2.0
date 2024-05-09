@@ -86,7 +86,7 @@ export default async function Home({
         ) : null}
       </div>
       <DealsList deals={deals} />
-      <div className="w-full">
+      <div className="w-full mt-20">
         <DealsPagination currentPage={page} totalPages={totalPages} />
       </div>
     </main>
