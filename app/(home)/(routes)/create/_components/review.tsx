@@ -71,7 +71,7 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
                   return (
                     <div className="truncate">
                       <Link
-                        href={formData[field.fieldName]}
+                        href={formData[field.fieldName] || ""}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:underline"
