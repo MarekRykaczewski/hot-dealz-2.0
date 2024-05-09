@@ -6,6 +6,7 @@ import DealDetails from "@/components/deal-details";
 import DealOwnerBanner from "@/components/deal-owner-banner";
 import DealStatusBanner from "@/components/deal-status-banner";
 import NotFound from "@/components/not-found";
+import Preview from "@/components/preview";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 
@@ -79,7 +80,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
 
         <div className="bg-white p-6 rounded-md">
           <h2 className="text-xl font-bold">About this deal</h2>
-          <p>{deal.description}</p>
+          <Preview value={deal.description} />
         </div>
 
         <div className="bg-white p-6 rounded-md">
