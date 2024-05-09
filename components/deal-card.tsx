@@ -34,6 +34,10 @@ const DealCard = ({ deal }: { deal: Deal }) => {
 
   const userId = user?.id;
 
+  const currentDate = new Date();
+  const dealEnded = endDate && currentDate > endDate;
+  const dealExpired = !deal.isPublished;
+
   const discountPercentage =
     price && nextBestPrice
       ? Math.floor((1 - price / nextBestPrice) * 100)
@@ -54,7 +58,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
     <div
       className={cn(
         "w-[95vw] xl:w-[60vw] shadow-md bg-white p-4 rounded-xl flex flex-col sm:flex-row sm:justify-between",
-        !deal.isPublished && "grayscale"
+        dealExpired || (dealEnded && "grayscale")
       )}
     >
       <div className="h-64 sm:w-64 bg-gray-100 border overflow-hidden rounded-xl">
