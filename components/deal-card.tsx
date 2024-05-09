@@ -53,7 +53,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
   return (
     <div
       className={cn(
-        "w-full shadow-md bg-white p-4 rounded-xl flex flex-col sm:flex-row sm:justify-between",
+        "w-[95vw] xl:w-[60vw] shadow-md bg-white p-4 rounded-xl flex flex-col sm:flex-row sm:justify-between",
         !deal.isPublished && "grayscale"
       )}
     >
