@@ -1,7 +1,11 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Category } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface ReviewProps {
   onSubmit: () => void;
@@ -10,6 +14,8 @@ interface ReviewProps {
 }
 
 const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const getCategoryName = (categoryId: string) => {
     const category = categories.find((cat) => cat.id === categoryId);
     return category ? category.name : "Unknown";
@@ -44,6 +50,12 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
     { fieldName: "description", displayName: "Description" },
     { fieldName: "categoryId", displayName: "Category" },
   ];
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    await onSubmit();
+    setIsLoading(false);
+  };
 
   return (
     <div className="w-full bg-white rounded-lg shadow-md p-6">
@@ -95,11 +107,15 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
         ))}
       </div>
       <Button
-        onClick={() => onSubmit()}
+        onClick={handleSubmit}
         type="button"
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6"
+        disabled={isLoading}
+        className={cn(
+          "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6",
+          isLoading && "opacity-50 cursor-not-allowed"
+        )}
       >
-        Submit
+        {isLoading ? "Submitting..." : "Submit"}
       </Button>
     </div>
   );
