@@ -16,6 +16,7 @@ export default async function Home({
   const page = parseInt(searchParams?.["page"] as string) || 1;
   const pageSize = parseInt(searchParams?.["per_page"] as string) || 10;
   const sortBy = (searchParams?.["sort_by"] as string) || "score";
+  const categoryFilter = (searchParams?.["category"] as string) || "";
 
   const totalCount = await db.deal.count();
 
@@ -29,7 +30,7 @@ export default async function Home({
     orderBy = { comments: { _count: "desc" } };
   }
 
-  const dealsWithCommentCount = await db.deal.findMany({
+  const dealsQuery = {
     skip: (page - 1) * pageSize,
     take: pageSize,
     include: {
@@ -41,7 +42,35 @@ export default async function Home({
       user: true,
     },
     orderBy,
-  });
+  };
+
+  if (categoryFilter) {
+    const category = await db.category.findFirst({
+      where: {
+        name: {
+          equals: categoryFilter,
+          mode: "insensitive",
+        },
+      },
+      include: {
+        subcategories: true,
+      },
+    });
+
+    if (category) {
+      const categoryIds = [
+        category.id,
+        ...(category.subcategories.map((sub) => sub.id) || []),
+      ];
+      dealsQuery.where = {
+        categoryId: {
+          in: categoryIds,
+        },
+      };
+    }
+  }
+
+  const dealsWithCommentCount = await db.deal.findMany(dealsQuery);
 
   const deals = await Promise.all(
     dealsWithCommentCount.map(async (deal) => {

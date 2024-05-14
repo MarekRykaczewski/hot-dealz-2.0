@@ -1,10 +1,11 @@
 "use client";
 import { Category } from "@prisma/client";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 const FilterCategory = ({ categories }: { categories: Category[] }) => {
+  const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
 
   const scroll = (scrollOffset: number) => {
@@ -13,17 +14,21 @@ const FilterCategory = ({ categories }: { categories: Category[] }) => {
     }
   };
 
+  const handleCategoryClick = (categoryName: string) => {
+    const queryParams = new URLSearchParams(router.search);
+    queryParams.set("category", categoryName);
+    router.push(`/?${queryParams.toString()}`);
+  };
+
   const categoriesMap = categories
     ? categories.map((category) => (
-        <Link
-          className="flex-shrink-0 w-fit"
+        <button
+          className="flex text-md leading-6 gap-1 h-10 min-w-fit px-6 items-center justify-center bg-orange-600 rounded-lg text-white font-semibold hover:bg-orange-500 transition"
           key={category.name}
-          href={`/category/${encodeURIComponent(category.name)}`}
+          onClick={() => handleCategoryClick(category.name)}
         >
-          <button className="flex text-md leading-6 gap-1 h-10 min-w-fit w-[150px] px-2 items-center justify-center bg-orange-600 rounded-lg text-white font-semibold hover:bg-orange-500 transition">
-            {category.name}
-          </button>
-        </Link>
+          {category.name}
+        </button>
       ))
     : null;
 
