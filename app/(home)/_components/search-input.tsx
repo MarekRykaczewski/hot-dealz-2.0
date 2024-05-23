@@ -4,18 +4,13 @@ import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
 import { Deal } from "@prisma/client";
 import { SearchIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import SearchItem from "./search-item";
 
 const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const router = useRouter();
-
-  const handleDealClick = (dealId: string) => {
-    router.push(`/deals/${dealId}`);
-  };
 
   useEffect(() => {
     const fetchDeals = async () => {
@@ -48,25 +43,21 @@ const SearchInput = () => {
 
   return (
     <div className="relative">
-      <SearchIcon className="h-4 w-4 absolute top-2 left-3 text-slate-500" />
+      <SearchIcon className="h-4 w-4 absolute top-3 left-3 text-slate-500" />
       <Input
-        className="w-full h-8 md:w-[300px] pl-9 rounded-full bg-slate-100 focus-visible:ring-orange-600"
+        className="sm:focus:w-fit w-[70vw] sm:w-fit rounded-full px-9 transition-all duration-100"
         placeholder="Search..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+        }}
       />
       {searchResults.length > 0 && (
-        <ul className="absolute z-10 bg-white mt-1 py-1 rounded-md shadow-lg w-full">
+        <div className="absolute z-10 bg-white mt-1 py-1 rounded-md shadow-lg w-full">
           {searchResults.map((deal: Deal) => (
-            <li
-              key={deal.id}
-              className="px-3 py-2 cursor-pointer"
-              onClick={() => handleDealClick(deal.id)}
-            >
-              {deal.title}
-            </li>
+            <SearchItem key={deal.id} deal={deal} />
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
