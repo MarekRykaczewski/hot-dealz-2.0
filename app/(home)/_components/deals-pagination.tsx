@@ -19,6 +19,7 @@ interface DealsPaginationProps {
 const DealsPagination = ({ currentPage, totalPages }: DealsPaginationProps) => {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(true);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +30,8 @@ const DealsPagination = ({ currentPage, totalPages }: DealsPaginationProps) => {
 
       const threshold = documentHeight / 2 - windowHeight / 2;
       setIsVisible(scrollTop > threshold);
+
+      setShowScrollTop(scrollTop > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -41,44 +44,59 @@ const DealsPagination = ({ currentPage, totalPages }: DealsPaginationProps) => {
     router.push(`/?page=${page}`);
   };
 
-  return (
-    <Pagination
-      className={`fixed bottom-0 left-0 right-0 border-t py-2 bg-white z-10 transition-opacity duration-300 ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <PaginationContent>
-        <PaginationItem>
-          <button
-            onClick={() => {
-              if (currentPage > 1) goToPage(currentPage - 1);
-            }}
-          >
-            <PaginationPrevious href="#" />
-          </button>
-        </PaginationItem>
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-        {[...Array(totalPages).keys()].map((index) => (
-          <PaginationItem key={index}>
-            <button onClick={() => goToPage(index + 1)}>
-              <PaginationLink href="#" isActive={currentPage === index + 1}>
-                {index + 1}
-              </PaginationLink>
+  return (
+    <>
+      <Pagination
+        className={`fixed bottom-0 left-0 right-0 border-t py-2 bg-white z-10 transition-opacity duration-300 ${
+          isVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <PaginationContent>
+          <PaginationItem>
+            <button
+              onClick={() => {
+                if (currentPage > 1) goToPage(currentPage - 1);
+              }}
+            >
+              <PaginationPrevious href="#" />
             </button>
           </PaginationItem>
-        ))}
 
-        <PaginationItem>
-          <button
-            onClick={() => {
-              if (currentPage < totalPages) goToPage(currentPage + 1);
-            }}
-          >
-            <PaginationNext href="#" />
-          </button>
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+          {[...Array(totalPages).keys()].map((index) => (
+            <PaginationItem key={index}>
+              <button onClick={() => goToPage(index + 1)}>
+                <PaginationLink href="#" isActive={currentPage === index + 1}>
+                  {index + 1}
+                </PaginationLink>
+              </button>
+            </PaginationItem>
+          ))}
+
+          <PaginationItem>
+            <button
+              onClick={() => {
+                if (currentPage < totalPages) goToPage(currentPage + 1);
+              }}
+            >
+              <PaginationNext href="#" />
+            </button>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-16 right-4 p-2 bg-blue-600 text-white rounded-full shadow-lg transition-opacity duration-300"
+        >
+          ↑
+        </button>
+      )}
+    </>
   );
 };
 
