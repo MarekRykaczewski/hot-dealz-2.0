@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { DealWithComments } from "@/types";
 import { useUser } from "@clerk/nextjs";
-import { Deal } from "@prisma/client";
 import { Clock, MessagesSquare, Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import UserProfileLink from "./user-profile-link";
 import Vote from "./vote";
 
-const DealCard = ({ deal }: { deal: Deal }) => {
+const DealCard = ({ deal }: { deal: DealWithComments }) => {
   const {
     title,
     link,
@@ -67,7 +67,7 @@ const DealCard = ({ deal }: { deal: Deal }) => {
       <div className="bg-white flex-grow sm:px-4 px-0 py-4 sm:py-0 flex flex-col justify-between">
         <div className="flex flex-col gap-1">
           <div className="text-sm text-gray-600 flex justify-between">
-            <Vote userId={userId} dealId={deal.id} score={score} />
+            <Vote userId={userId!} dealId={deal.id} score={score} />
             <div className="flex gap-2 items-center">
               <Clock size={18} />
               <div className="flex flex-col items-center">

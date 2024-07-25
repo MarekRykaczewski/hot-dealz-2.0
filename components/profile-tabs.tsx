@@ -1,13 +1,20 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { Deal } from "@prisma/client";
+import { SetStateAction, useState } from "react";
 import DealsList from "./deals-list";
 
-const ProfileTabs = ({ userDeals, userSavedDeals }) => {
+const ProfileTabs = ({
+  userDeals,
+  userSavedDeals,
+}: {
+  userDeals: Deal[];
+  userSavedDeals: Deal[];
+}) => {
   const [activeTab, setActiveTab] = useState("userDeals");
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = (tab: SetStateAction<string>) => {
     setActiveTab(tab);
   };
 

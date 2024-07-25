@@ -4,7 +4,7 @@ import { Bookmark } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
-const SavedDealButton = ({ dealId }) => {
+const SavedDealButton = ({ dealId }: { dealId: string }) => {
   const { user } = useUser();
   const [isSaved, setIsSaved] = useState(false);
 

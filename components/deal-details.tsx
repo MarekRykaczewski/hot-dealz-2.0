@@ -1,5 +1,6 @@
 "use client";
 
+import { Deal } from "@prisma/client";
 import { Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -8,7 +9,7 @@ import { ShareDeal } from "./share-deal";
 import { Button } from "./ui/button";
 import Vote from "./vote";
 
-const DealDetails = ({ deal }) => {
+const DealDetails = ({ deal }: { deal: Deal }) => {
   const discountPercentage =
     deal.price && deal.nextBestPrice
       ? Math.floor((1 - deal.price / deal.nextBestPrice) * 100)
@@ -49,7 +50,7 @@ const DealDetails = ({ deal }) => {
             <p className="text-gray-500 text-2xl font-bold line-through">
               {deal.nextBestPrice}zł
             </p>
-            {deal.discountPercentage !== null && (
+            {discountPercentage !== null && (
               <p className="text-2xl">-{discountPercentage}%</p>
             )}
           </div>

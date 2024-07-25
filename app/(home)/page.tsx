@@ -1,18 +1,16 @@
+import { PageProps } from "@/.next/types/app/layout";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
 import { db } from "@/lib/db";
+import { DealWithComments } from "@/types";
 import { auth } from "@clerk/nextjs";
+import { Prisma } from "@prisma/client";
 import Link from "next/link";
-import { ParsedUrlQuery } from "querystring";
 import DealsPagination from "./_components/deals-pagination";
 import FilterCategory from "./_components/filter-category";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams?: ParsedUrlQuery;
-}) {
+export default async function Home({ searchParams }: PageProps) {
   const page = parseInt(searchParams?.["page"] as string) || 1;
   const pageSize = parseInt(searchParams?.["per_page"] as string) || 10;
   const sortBy = (searchParams?.["sort_by"] as string) || "score";
@@ -22,7 +20,7 @@ export default async function Home({
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  let orderBy: { [key: string]: "asc" | "desc" } = {};
+  let orderBy: { [key: string]: any } = {};
 
   if (sortBy === "score") {
     orderBy = { score: "desc" };
@@ -30,7 +28,7 @@ export default async function Home({
     orderBy = { comments: { _count: "desc" } };
   }
 
-  const dealsQuery = {
+  const dealsQuery: Prisma.DealFindManyArgs = {
     skip: (page - 1) * pageSize,
     take: pageSize,
     include: {
@@ -70,15 +68,14 @@ export default async function Home({
     }
   }
 
-  const dealsWithCommentCount = await db.deal.findMany(dealsQuery);
+  const dealsWithComments = (await db.deal.findMany(
+    dealsQuery
+  )) as DealWithComments[];
 
-  const deals = await Promise.all(
-    dealsWithCommentCount.map(async (deal) => {
-      const commentCount = deal.comments.length;
-      const { comments, ...dealWithoutComments } = deal;
-      return { ...dealWithoutComments, commentCount };
-    })
-  );
+  const deals: DealWithComments[] = dealsWithComments.map((deal) => ({
+    ...deal,
+    commentCount: deal.comments?.length,
+  }));
 
   const categories = await db.category.findMany({
     where: { parentId: null },

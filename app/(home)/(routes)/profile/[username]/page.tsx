@@ -1,7 +1,8 @@
+import { PageProps } from "@/.next/types/app/layout";
 import ProfileTabs from "@/components/profile-tabs";
 import { db } from "@/lib/db";
 
-const ProfilePage = async ({ params }) => {
+const ProfilePage = async ({ params }: PageProps) => {
   const { username } = params;
 
   const user = await db.user.findUnique({
@@ -38,9 +39,9 @@ const ProfilePage = async ({ params }) => {
     },
   });
 
-  const memberSince = user.createdAt.toDateString();
-  const numDeals = user.deals.length;
-  const numComments = user.comments.length;
+  const memberSince = user?.createdAt.toDateString();
+  const numDeals = user?.deals.length;
+  const numComments = user?.comments.length;
 
   if (!username) {
     return <div>Loading...</div>;

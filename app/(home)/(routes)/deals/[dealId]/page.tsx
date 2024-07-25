@@ -33,7 +33,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
 
   const { userId } = auth();
 
-  const isDealOwner = deal.userId === userId;
+  const isDealOwner = deal?.userId === userId;
 
   if (!deal) {
     return <NotFound />;

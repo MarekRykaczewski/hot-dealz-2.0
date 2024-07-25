@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { FormData } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -15,12 +16,9 @@ const DealDescriptionFormSchema = z.object({
   description: z.string().min(1).max(500),
 });
 
-interface FormData {
-  description: string;
-}
-
 interface DealDescriptionFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  formData: FormData;
 }
 
 const DealDescriptionForm = ({

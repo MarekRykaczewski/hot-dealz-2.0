@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { FormData } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandCoins, Scissors, Truck } from "lucide-react";
 import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
@@ -25,16 +26,9 @@ const dealInfoSchema = z
     path: ["price"],
   });
 
-interface FormData {
-  title: string;
-  price: number;
-  nextBestPrice: number;
-  promoCode?: string;
-  shippingPrice: number;
-}
-
 interface DealInfoProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  formData: FormData;
 }
 
 const DealInfo = ({ handleFormStep, formData }: DealInfoProps) => {

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { Hourglass, Pencil } from "lucide-react";
 import { Button } from "./ui/button";
 
-const DealOwnerBanner = ({ isPublished }) => {
+const DealOwnerBanner = ({ isPublished }: { isPublished: boolean }) => {
   return (
     <div
       className={"flex items-center justify-between bg-white rounded-lg p-6"}

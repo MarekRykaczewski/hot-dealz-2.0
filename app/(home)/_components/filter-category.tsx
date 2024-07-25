@@ -6,6 +6,7 @@ import { useRef } from "react";
 
 const FilterCategory = ({ categories }: { categories: Category[] }) => {
   const router = useRouter();
+
   const ref = useRef<HTMLDivElement | null>(null);
 
   const scroll = (scrollOffset: number) => {
@@ -15,9 +16,7 @@ const FilterCategory = ({ categories }: { categories: Category[] }) => {
   };
 
   const handleCategoryClick = (categoryName: string) => {
-    const queryParams = new URLSearchParams(router.search);
-    queryParams.set("category", categoryName);
-    router.push(`/?${queryParams.toString()}`);
+    router.push(`/?${"category=" + categoryName.toString()}`);
   };
 
   const categoriesMap = categories

@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, Dot } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-const DealImageCarousel = ({ imageUrls }) => {
+const DealImageCarousel = ({ imageUrls }: { imageUrls: string[] }) => {
   const [slides, setSlides] = useState(imageUrls);
   const [currentIndex, setCurrentIndex] = useState(0);
 

@@ -1,23 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { FormData } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 
+// Adjust the schema to match `FormData`
 const DealImageFormSchema = z.object({
-  imageUrl: z.string().min(1),
+  imageUrls: z.array(z.string()).nonempty("At least one image URL is required"),
 });
-
-interface FormData {
-  imageUrl: string;
-}
 
 interface DealImageFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
   formData: FormData;
+  setSelectedFile: (file: File) => void;
 }
 
 const DealImageForm = ({
@@ -27,18 +26,20 @@ const DealImageForm = ({
 }: DealImageFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  // Ensure the form type matches the `FormData` interface
   const form = useForm<FormData>({
     resolver: zodResolver(DealImageFormSchema),
     defaultValues: {
-      imageUrl: formData.imageUrl,
+      ...formData, // Ensure all required fields are provided
+      imageUrls: formData.imageUrls,
     },
   });
 
   useEffect(() => {
-    if (formData.imageUrl) {
-      setImagePreview(formData.imageUrl);
+    if (formData.imageUrls.length > 0) {
+      setImagePreview(formData.imageUrls[0]);
     }
-  }, [formData.imageUrl]);
+  }, [formData.imageUrls]);
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -47,16 +48,20 @@ const DealImageForm = ({
       reader.onloadend = () => {
         const imageUrl = reader.result as string;
         setImagePreview(imageUrl);
-        form.setValue("imageUrl", imageUrl);
+        const currentImageUrls = form.getValues("imageUrls");
+        form.setValue("imageUrls", [...currentImageUrls, imageUrl]); // Append to existing image URLs
+        setSelectedFile(file); // Update parent component with selected file
       };
       reader.readAsDataURL(file);
-      setSelectedFile(file);
     }
   };
+
   return (
     <>
       <h1 className="text-3xl text-center font-bold">Deal Image</h1>
-      <p className="text-lg text-center text-slate-600">Deal Image</p>
+      <p className="text-lg text-center text-slate-600">
+        Upload an image for the deal
+      </p>
 
       {imagePreview && (
         <div className="relative text-center h-64 w-full border rounded-xl bg-gray-100">

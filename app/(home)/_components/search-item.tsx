@@ -1,9 +1,10 @@
+import { Deal } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-const SearchItem = ({ deal }) => {
+const SearchItem = ({ deal }: { deal: Deal }) => {
   const percentOff = Math.round(
-    ((deal.nextBestPrice - deal.price) / deal.nextBestPrice) * 100
+    ((deal.nextBestPrice! - deal.price!) / deal.nextBestPrice!) * 100
   );
 
   return (
@@ -31,7 +32,9 @@ const SearchItem = ({ deal }) => {
             <p className="line-through text-sm text-gray-500">
               {deal.nextBestPrice}zł
             </p>
-            <p className="text-sm text-black">-{percentOff}%</p>
+            {deal.price && deal.nextBestPrice && (
+              <p className="text-sm text-black">-{percentOff}%</p>
+            )}
           </div>
         </div>
       </Link>

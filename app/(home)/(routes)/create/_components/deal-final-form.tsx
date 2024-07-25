@@ -8,21 +8,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { FormData } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 
 const DealFinalFormSchema = z.object({
-  startDate: z.date(),
-  endDate: z.date(),
-  categoryId: z.string(),
+  startDate: z.date().nullable(),
+  endDate: z.date().nullable(),
+  categoryId: z.string().min(1, "Category is required"),
 });
-
-interface FormData {
-  startDate: Date;
-  endDate: Date;
-  categoryId: string;
-}
 
 interface DealFinalFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
@@ -30,6 +25,7 @@ interface DealFinalFormProps {
     name: string;
     id: string;
   }[];
+  formData: FormData;
 }
 
 const DealFinalForm = ({
@@ -37,7 +33,7 @@ const DealFinalForm = ({
   options,
   formData,
 }: DealFinalFormProps) => {
-  const form = useForm({
+  const form = useForm<FormData>({
     resolver: zodResolver(DealFinalFormSchema),
     defaultValues: {
       startDate: formData.startDate,
@@ -108,7 +104,7 @@ const DealFinalForm = ({
             <Button type="button" variant="ghost">
               Cancel
             </Button>
-            <Button type="submit" onClick={() => handleFormStep(form)}>
+            <Button type="button" onClick={() => handleFormStep(form)}>
               Continue
             </Button>
           </div>

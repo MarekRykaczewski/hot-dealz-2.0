@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
-const CommentSort = ({ onChange }) => {
-  const [sortValue, setSortValue] = useState("newest");
+interface CommentSortProps {
+  onChange: (value: "newest" | "liked" | "oldest") => void;
+}
 
-  const handleSortChange = (event) => {
-    const value = event.target.value;
+const CommentSort: React.FC<CommentSortProps> = ({ onChange }) => {
+  const [sortValue, setSortValue] = useState<"newest" | "liked" | "oldest">(
+    "newest"
+  );
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value as "newest" | "liked" | "oldest";
     setSortValue(value);
-    onChange && onChange(value);
+    onChange(value);
   };
 
   return (
@@ -16,7 +22,8 @@ const CommentSort = ({ onChange }) => {
       <select
         value={sortValue}
         onChange={handleSortChange}
-        className="appearance-none bg-transparent border-none py-2  pr-8 rounded"
+        className="appearance-none bg-transparent border-none py-2 pr-8 rounded"
+        aria-label="Sort comments"
       >
         <option value="newest">Newest First</option>
         <option value="liked">Most Liked</option>

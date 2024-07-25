@@ -1,8 +1,8 @@
 "use client";
 
 import useComponentVisible from "@/hooks/useComponentVisible";
+import { CommentBase } from "@/types";
 import { useAuth } from "@clerk/nextjs";
-import { Comment } from "@prisma/client";
 import axios from "axios";
 import { Check, Laugh, Reply, ThumbsUp } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -11,21 +11,28 @@ import ReplyForm from "./reply-form";
 import { Button } from "./ui/button";
 import UserProfileLink from "./user-profile-link";
 
-const CommentCard = ({ comment }: { comment: Comment }) => {
+interface Reaction {
+  reaction: string;
+}
+
+const CommentCard = ({ comment }: { comment: CommentBase }) => {
   const [replying, setReplying] = useState(false);
-  const [reactions, setReactions] = useState([]);
+  const [reactions, setReactions] = useState<Reaction[]>([]);
   const {
     ref: reactionRef,
     isComponentVisible,
     setIsComponentVisible,
   } = useComponentVisible(false);
 
-  const userId = useAuth();
+  const { userId } = useAuth();
 
-  const reactionCounts = reactions.reduce((acc, reaction) => {
-    acc[reaction.reaction] = (acc[reaction.reaction] || 0) + 1;
-    return acc;
-  }, {});
+  const reactionCounts = reactions.reduce<Record<string, number>>(
+    (acc, reaction) => {
+      acc[reaction.reaction] = (acc[reaction.reaction] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
 
   const toggleReply = () => {
     setReplying(!replying);
@@ -49,11 +56,12 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
         throw new Error("Failed to record reaction");
       }
     } catch (error) {
-      console.error("Error recording reaction:", error.message);
+      const errorMessage = (error as Error).message || "Unknown error occurred";
+      console.error("Error recording reaction:", errorMessage);
     }
   };
 
-  const getReactionEmoji = (reaction) => {
+  const getReactionEmoji = (reaction: string) => {
     switch (reaction) {
       case "like":
         return "👍";
@@ -73,7 +81,7 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
           `/api/deals/${comment.dealId}/comment/${comment.id}/reactions`
         );
         if (response.status === 200) {
-          const data = response.data;
+          const data: Reaction[] = response.data;
           setReactions(data);
         } else {
           throw new Error("Failed to fetch reactions");

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { FormData } from "@/types";
 import { Category } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import { useState } from "react";
 
 interface ReviewProps {
   onSubmit: () => void;
-  formData: {};
+  formData: FormData;
   categories: Category[];
 }
 
@@ -21,7 +22,7 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
     return category ? category.name : "Unknown";
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: Date) => {
     if (!dateString) return "";
 
     const date = new Date(dateString);
@@ -38,13 +39,13 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
     return `${month}/${day}/${year}`;
   };
 
-  const fields = [
+  const fields: { fieldName: keyof FormData; displayName: string }[] = [
     { fieldName: "link", displayName: "Link" },
     { fieldName: "title", displayName: "Title" },
     { fieldName: "price", displayName: "Price" },
     { fieldName: "nextBestPrice", displayName: "Next Best Price" },
     { fieldName: "promoCode", displayName: "Promo Code" },
-    { fieldName: "shippingCost", displayName: "Shipping Cost" },
+    { fieldName: "shippingPrice", displayName: "Shipping Cost" },
     { fieldName: "startDate", displayName: "Start Date" },
     { fieldName: "endDate", displayName: "End Date" },
     { fieldName: "description", displayName: "Description" },
@@ -63,19 +64,29 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
       <p className="text-lg text-center text-gray-700 mb-6">
         Please review your information before submitting:
       </p>
-      {formData.imageUrl && (
-        <div className="relative bg-gray-100 border rounded-xl w-full h-64 mb-4">
-          <Image
-            src={formData.imageUrl}
-            alt="Product"
-            objectFit="contain"
-            fill
-          />
+
+      {/* Display multiple images if available */}
+      {formData.imageUrls.length > 0 && (
+        <div className="flex flex-wrap gap-4 mb-4">
+          {formData.imageUrls.map((url, index) => (
+            <div
+              key={index}
+              className="relative bg-gray-100 border rounded-xl w-full h-64"
+            >
+              <Image
+                src={url}
+                alt={`Preview ${index + 1}`}
+                objectFit="contain"
+                fill
+              />
+            </div>
+          ))}
         </div>
       )}
+
       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {fields.map((field, index) => (
-          <span key={index}>
+          <span key={index} className="font-medium">
             {field.displayName}:{" "}
             {(() => {
               switch (field.fieldName) {
@@ -83,7 +94,7 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
                   return (
                     <div className="truncate">
                       <Link
-                        href={formData[field.fieldName] || ""}
+                        href={formData[field.fieldName] || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:underline"
@@ -106,6 +117,7 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
           </span>
         ))}
       </div>
+
       <Button
         onClick={handleSubmit}
         type="button"

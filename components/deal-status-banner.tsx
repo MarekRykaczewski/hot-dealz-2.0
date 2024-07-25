@@ -1,6 +1,7 @@
+import { Deal } from "@prisma/client";
 import { AlertCircle, Clock } from "lucide-react";
 
-const DealStatusBanner = ({ deal }) => {
+const DealStatusBanner = ({ deal }: { deal: Deal }) => {
   const currentDate = new Date();
   const dealStarted = deal.startDate && currentDate >= deal.startDate;
   const dealEnded = deal.endDate && currentDate > deal.endDate;
@@ -13,7 +14,7 @@ const DealStatusBanner = ({ deal }) => {
         <span>Unfortunately this deal has expired</span>
       </div>
     );
-  } else if (dealStarted && !dealEnded) {
+  } else if (dealStarted && deal.endDate && !dealEnded) {
     return (
       <div className="rounded-lg flex items-center justify-center gap-2 bg-green-100 p-4 text-green-700 text-lg">
         <span>Deal expires on {deal.endDate.toDateString()}</span>

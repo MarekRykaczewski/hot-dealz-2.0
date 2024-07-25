@@ -3,7 +3,7 @@
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 const FinishAccountSetup = () => {
@@ -12,11 +12,11 @@ const FinishAccountSetup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleChange = (e) => {
-    setUsername(e.target.value);
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setUsername(e.currentTarget.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setIsLoading(true);

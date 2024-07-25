@@ -1,32 +1,54 @@
 "use client";
 
+import { CommentWithChildren, CommentWithLikes } from "@/types";
+import { Comment } from "@prisma/client";
 import { useState } from "react";
 import CommentCard from "./comment-card";
 import CommentForm from "./comment-form";
 import CommentSort from "./comment-sort";
 
-interface CommentWithChildren extends Comment {
-  childComments: CommentWithChildren[];
+interface CommentSectionProps {
+  commentCount: number;
+  dealId: string;
+  dealComments: Comment[];
 }
 
-const CommentSection = ({ commentCount, dealId, dealComments }) => {
+const CommentSection = ({
+  commentCount,
+  dealId,
+  dealComments,
+}: CommentSectionProps) => {
   const [sortCriteria, setSortCriteria] = useState<
     "newest" | "liked" | "oldest"
   >("newest");
 
-  const handleSortChange = (value: "newest" | "liked" | "oldest") => {
-    setSortCriteria(value);
+  const handleSortChange = (value: string) => {
+    if (value === "newest" || value === "liked" || value === "oldest") {
+      setSortCriteria(value as "newest" | "liked" | "oldest");
+    }
   };
 
-  const sortedComments = dealComments.slice().sort((a, b) => {
-    if (sortCriteria === "newest") {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    } else if (sortCriteria === "liked") {
-      return b.likes - a.likes;
-    } else {
-      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-    }
-  });
+  const sortedComments = (dealComments as CommentWithLikes[])
+    .slice()
+    .sort((a, b) => {
+      if (sortCriteria === "newest") {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      } else if (sortCriteria === "liked") {
+        return b.likes - a.likes;
+      } else {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      }
+    });
+
+  const commentsWithChildren = sortedComments.map((comment) => ({
+    ...comment,
+    childComments: comment.childComments || [],
+    user: comment.user,
+  }));
 
   const renderComments = (
     comments: CommentWithChildren[],
@@ -42,7 +64,7 @@ const CommentSection = ({ commentCount, dealId, dealComments }) => {
     ));
   };
 
-  const renderedComments = renderComments(sortedComments);
+  const renderedComments = renderComments(commentsWithChildren);
 
   return (
     <div>
@@ -50,7 +72,10 @@ const CommentSection = ({ commentCount, dealId, dealComments }) => {
         <div className="flex items-center gap-4 mb-2">
           <h2 className="text-xl font-bold">{commentCount} Comments</h2>
           <span>
-            Sorting: <CommentSort onChange={handleSortChange} />
+            Sorting:{" "}
+            <CommentSort
+              onChange={handleSortChange as (value: string) => void}
+            />
           </span>
         </div>
 

@@ -8,10 +8,20 @@ import {
   BreadcrumbList,
 } from "./ui/breadcrumb";
 
-const CategoryCrumbs = async ({ categoryId }: { categoryId: string }) => {
-  const breadcrumbs = [];
+const CategoryCrumbs = async ({
+  categoryId,
+}: {
+  categoryId: string | null;
+}) => {
+  const breadcrumbs: ({
+    parentCategory: {
+      id: string;
+      name: string;
+      parentId: string | null;
+    } | null;
+  } & { id: string; name: string; parentId: string | null })[] = [];
 
-  const fetchCategoryHierarchy = async (categoryId) => {
+  const fetchCategoryHierarchy = async (categoryId: string) => {
     const category = await db.category.findUnique({
       where: {
         id: categoryId,
@@ -29,7 +39,7 @@ const CategoryCrumbs = async ({ categoryId }: { categoryId: string }) => {
     }
   };
 
-  await fetchCategoryHierarchy(categoryId);
+  if (categoryId) await fetchCategoryHierarchy(categoryId);
 
   return (
     <Breadcrumb>

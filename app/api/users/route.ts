@@ -3,6 +3,11 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
 
+interface WebhookEventData {
+  id: string;
+  username: string | null;
+}
+
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
@@ -20,7 +25,7 @@ export async function POST(req: Request) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error occured -- no svix headers", {
+    return new Response("Error occurred -- no svix headers", {
       status: 400,
     });
   }
@@ -43,15 +48,17 @@ export async function POST(req: Request) {
     }) as WebhookEvent;
   } catch (err) {
     console.error("Error verifying webhook:", err);
-    return new Response("Error occured", {
+    return new Response("Error occurred", {
       status: 400,
     });
   }
 
   // Extract user data from the webhook payload
-  const {
-    data: { id, username },
-  } = evt;
+  const { data }: { data: WebhookEventData } = evt as {
+    data: WebhookEventData;
+  };
+
+  const { id, username } = data;
 
   // Check if the user already exists in the database
   const existingUser = await db.user.findUnique({

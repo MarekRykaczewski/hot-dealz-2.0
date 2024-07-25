@@ -1,6 +1,7 @@
 "use client";
 
 import { uploadFiles } from "@/lib/uploadthing";
+import { FormData } from "@/types";
 import { Category } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -21,14 +22,30 @@ interface DealFormProps {
 
 const DealForm = ({ categories }: DealFormProps) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({});
-  const [formCompletion, setFormCompletion] = useState(Array(5).fill(false));
+  const [formData, setFormData] = useState<FormData>({
+    link: "",
+    title: "",
+    description: "",
+    category: "",
+    imageUrls: [],
+    categoryId: "",
+    price: 0,
+    nextBestPrice: 0,
+    promoCode: "",
+    shippingPrice: 0,
+    startDate: undefined,
+    endDate: undefined,
+  });
+  const [formCompletion, setFormCompletion] = useState(Array(6).fill(false));
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const router = useRouter();
 
-  const updateFormData = (data: {}) => {
-    setFormData((prevData) => ({ ...prevData, ...data }));
+  const updateFormData = (data: Partial<FormData>) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      ...data,
+    }));
   };
 
   const updateFormCompletion = (stepIndex: number, isCompleted: boolean) => {
@@ -39,7 +56,7 @@ const DealForm = ({ categories }: DealFormProps) => {
     });
   };
 
-  const handleFormStep = (form: UseFormReturn<any>) => {
+  const handleFormStep = (form: UseFormReturn<FormData>) => {
     form.trigger().then((isValid: boolean) => {
       if (isValid) {
         const formData = form.getValues();
@@ -65,7 +82,7 @@ const DealForm = ({ categories }: DealFormProps) => {
         // Update formData with the uploaded image URL
         const formDataWithImage = {
           ...formData,
-          imageUrls: [uploadedImageUrl],
+          imageUrls: [...formData.imageUrls, uploadedImageUrl], // Append the new image URL
         };
 
         // Submit the form data with the uploaded image

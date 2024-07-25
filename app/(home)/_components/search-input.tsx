@@ -51,7 +51,7 @@ const SearchInput = () => {
         onChange={(e) => {
           setSearchTerm(e.target.value);
         }}
-        onBlur={() => setSearchResults({})}
+        onBlur={() => setSearchResults([])}
       />
       {searchResults.length > 0 && (
         <div className="absolute z-10 bg-white mt-1 py-1 rounded-md shadow-lg w-full">
