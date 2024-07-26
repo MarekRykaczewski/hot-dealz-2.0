@@ -1,11 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, handleCopyToClipboard } from "@/lib/utils";
 import { DealWithComments } from "@/types";
 import { useUser } from "@clerk/nextjs";
 import { Clock, MessagesSquare, Scissors, Truck } from "lucide-react";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import DealImageCarousel from "./deal-image-carousel";
 import Preview from "./preview";
 import SavedDealButton from "./saved-deal-button";
@@ -42,17 +41,6 @@ const DealCard = ({ deal }: { deal: DealWithComments }) => {
     price && nextBestPrice
       ? Math.floor((1 - price / nextBestPrice) * 100)
       : null;
-
-  const handleCopyToClipboard = (promoCode: string) => {
-    navigator.clipboard.writeText(promoCode).then(
-      () => {
-        toast.success("Promo code copied to clipboard!");
-      },
-      () => {
-        toast.error("Failed to copy promo code to clipboard.");
-      }
-    );
-  };
 
   return (
     <div
