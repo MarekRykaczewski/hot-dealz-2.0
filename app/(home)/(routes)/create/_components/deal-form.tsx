@@ -13,6 +13,7 @@ import DealFinalForm from "./deal-final-form";
 import DealImageForm from "./deal-image-form";
 import DealInfo from "./deal-info-form";
 import DealLinkForm from "./deal-link-form";
+import ProgressBar from "./progress-bar";
 import Review from "./review";
 import SideBar from "./side-bar";
 
@@ -145,14 +146,17 @@ const DealForm = ({ categories }: DealFormProps) => {
   };
 
   return (
-    <div className="flex w-full">
-      <SideBar
-        formCompletion={formCompletion}
-        currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
-      />
-      <div className="flex flex-col mb-[25vh] p-6 w-full items-center justify-center">
-        {renderStep()}
+    <div className="flex w-full flex-col">
+      <ProgressBar currentStep={currentStep} totalSteps={6} />
+      <div className="flex w-full">
+        <SideBar
+          formCompletion={formCompletion}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+        />
+        <div className="flex flex-col mb-[25vh] p-6 w-full items-center justify-center">
+          {renderStep()}
+        </div>
       </div>
     </div>
   );
