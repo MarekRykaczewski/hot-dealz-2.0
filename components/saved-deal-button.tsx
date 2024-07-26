@@ -1,3 +1,5 @@
+"use client";
+
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { Bookmark } from "lucide-react";
