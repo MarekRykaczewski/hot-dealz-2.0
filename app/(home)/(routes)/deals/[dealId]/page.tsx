@@ -6,6 +6,7 @@ import DealStatusBanner from "@/components/deal-status-banner";
 import NotFound from "@/components/not-found";
 import Preview from "@/components/preview";
 import { db } from "@/lib/db";
+import { DealBase } from "@/types";
 import { auth } from "@clerk/nextjs";
 
 const DealPage = async ({ params }: { params: { dealId: string } }) => {
@@ -28,16 +29,20 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
           parentId: null,
         },
       },
+      user: true,
     },
   });
-
-  const { userId } = auth();
-
-  const isDealOwner = deal?.userId === userId;
 
   if (!deal) {
     return <NotFound />;
   }
+
+  if (!deal.user.username) {
+    throw new Error("Deal owner does not have a username");
+  }
+
+  const { userId } = auth();
+  const isDealOwner = deal?.userId === userId;
 
   return (
     <div className="w-full bg-gray-100">
@@ -49,7 +54,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
 
         {<DealStatusBanner deal={deal} />}
         <div className="flex bg-white rounded-lg p-6">
-          <DealDetails deal={deal} />
+          <DealDetails deal={deal as DealBase} />
         </div>
 
         <div className="bg-white p-6 rounded-md">

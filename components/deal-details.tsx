@@ -1,15 +1,16 @@
 "use client";
 
-import { Deal } from "@prisma/client";
+import { DealBase } from "@/types";
 import { Scissors, Truck } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import DealImageCarousel from "./deal-image-carousel";
 import { ShareDeal } from "./share-deal";
 import { Button } from "./ui/button";
+import UserProfileLink from "./user-profile-link";
 import Vote from "./vote";
 
-const DealDetails = ({ deal }: { deal: Deal }) => {
+const DealDetails = ({ deal }: { deal: DealBase }) => {
   const discountPercentage =
     deal.price && deal.nextBestPrice
       ? Math.floor((1 - deal.price / deal.nextBestPrice) * 100)
@@ -91,6 +92,10 @@ const DealDetails = ({ deal }: { deal: Deal }) => {
               </button>
             </div>
           )}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-gray-500">Shared by</span>
+          <UserProfileLink username={deal.user.username} />
         </div>
       </div>
     </>
