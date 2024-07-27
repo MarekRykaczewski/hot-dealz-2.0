@@ -2,7 +2,13 @@ import { cn } from "@/lib/utils";
 import { Hourglass, Pencil } from "lucide-react";
 import { Button } from "./ui/button";
 
-const DealOwnerBanner = ({ isPublished }: { isPublished: boolean }) => {
+const DealOwnerBanner = ({
+  isPublished,
+  toggleEditMode,
+}: {
+  isPublished: boolean;
+  toggleEditMode: () => void;
+}) => {
   return (
     <div
       className={"flex items-center justify-between bg-white rounded-lg p-6"}
@@ -18,9 +24,12 @@ const DealOwnerBanner = ({ isPublished }: { isPublished: boolean }) => {
           {isPublished ? "Active" : "Archived"}
         </div>
       </div>
-
       <div className="flex gap-2">
-        <Button className="flex gap-2" variant={"orange"}>
+        <Button
+          className="flex gap-2"
+          variant={"orange"}
+          onClick={toggleEditMode}
+        >
           <Pencil />
           Edit
         </Button>

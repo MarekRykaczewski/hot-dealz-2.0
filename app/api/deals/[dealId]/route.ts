@@ -2,13 +2,11 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { dealId: string } }
-) {
+export async function PATCH(req: Request) {
   try {
     const { userId } = auth();
     const {
+      id,
       title,
       link,
       description,
@@ -27,7 +25,7 @@ export async function PATCH(
     }
 
     const deal = await db.deal.update({
-      where: { id: params.dealId },
+      where: { id },
       data: {
         userId,
         title,
