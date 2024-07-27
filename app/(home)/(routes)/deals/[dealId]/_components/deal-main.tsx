@@ -26,6 +26,7 @@ const DealMain = ({
       {isDealOwner && (
         <DealOwnerBanner
           isPublished={deal.isPublished}
+          dealId={deal.id}
           toggleEditMode={toggleEditMode}
         />
       )}
