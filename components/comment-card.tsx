@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ReplyForm from "./reply-form";
 import { Button } from "./ui/button";
-import UserProfileLink from "./user-profile-link";
 
 interface Reaction {
   reaction: string;
@@ -18,6 +17,9 @@ interface Reaction {
 const CommentCard = ({ comment }: { comment: CommentBase }) => {
   const [replying, setReplying] = useState(false);
   const [reactions, setReactions] = useState<Reaction[]>([]);
+  const [childComments, setChildComments] = useState<CommentBase[]>([]);
+  const [loadingReplies, setLoadingReplies] = useState(false);
+  const [repliesLoaded, setRepliesLoaded] = useState(false);
   const {
     ref: reactionRef,
     isComponentVisible,
@@ -94,10 +96,30 @@ const CommentCard = ({ comment }: { comment: CommentBase }) => {
     fetchReactions();
   }, [comment.dealId, comment.id]);
 
+  const loadReplies = async () => {
+    setLoadingReplies(true);
+    try {
+      const response = await axios.get(
+        `/api/deals/${comment.dealId}/comment/${comment.id}`
+      );
+      if (response.status === 200) {
+        const data: CommentBase[] = response.data;
+        setChildComments(data);
+        setRepliesLoaded(true);
+      } else {
+        throw new Error("Failed to load replies");
+      }
+    } catch (error) {
+      console.error("Error loading replies:", error);
+    } finally {
+      setLoadingReplies(false);
+    }
+  };
+
   return (
     <div className="border bg-white p-2 rounded-lg" key={comment.id}>
       <div className="flex justify-between">
-        <UserProfileLink username={comment.user.username} />
+        {/* <UserProfileLink username={comment.user.username} /> */}
       </div>
       <div className="px-1 py-3">
         <p>{comment.content}</p>
@@ -155,6 +177,16 @@ const CommentCard = ({ comment }: { comment: CommentBase }) => {
         {replying && (
           <ReplyForm dealId={comment.dealId} parentId={comment.id} />
         )}
+      </div>
+      {!repliesLoaded && (
+        <Button onClick={loadReplies} variant="ghost" disabled={loadingReplies}>
+          {loadingReplies ? "Loading..." : "Load Replies"}
+        </Button>
+      )}
+      <div className="mt-2">
+        {childComments.map((childComment) => (
+          <CommentCard key={childComment.id} comment={childComment} />
+        ))}
       </div>
     </div>
   );

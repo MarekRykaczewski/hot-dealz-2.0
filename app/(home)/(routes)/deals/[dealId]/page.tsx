@@ -15,12 +15,6 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
       comments: {
         include: {
           user: true,
-          childComments: {
-            include: {
-              user: true,
-              childComments: true,
-            },
-          },
         },
         where: {
           parentId: null,
