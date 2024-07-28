@@ -1,4 +1,3 @@
-import { PageProps } from "@/.next/types/app/(home)/page";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
@@ -9,6 +8,7 @@ import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import DealsPagination from "./_components/deals-pagination";
 import FilterCategory from "./_components/filter-category";
+import { PageProps } from "@/.next/types/app/layout";
 
 export default async function Home({ searchParams }: PageProps) {
   const page = parseInt(searchParams?.["page"] as string) || 1;

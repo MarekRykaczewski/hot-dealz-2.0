@@ -1,4 +1,4 @@
-import { PageProps } from "@/.next/types/app/(home)/page";
+import { PageProps } from "@/.next/types/app/layout";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
