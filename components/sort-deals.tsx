@@ -6,10 +6,20 @@ import { useSearchParams } from "next/navigation";
 const SortDeals = () => {
   const searchParams = useSearchParams();
   const sort_by = searchParams.get("sort_by");
+  const category = searchParams.get("category");
 
   return (
     <>
-      <Link href={{ pathname: "/", query: { sort_by: "score" } }} passHref>
+      <Link
+        href={{
+          pathname: "/",
+          query: {
+            sort_by: "score",
+            category: category,
+          },
+        }}
+        passHref
+      >
         <button
           className={
             sort_by === "score"
@@ -20,7 +30,16 @@ const SortDeals = () => {
           Score
         </button>
       </Link>
-      <Link href={{ pathname: "/", query: { sort_by: "comments" } }} passHref>
+      <Link
+        href={{
+          pathname: "/",
+          query: {
+            sort_by: "comments",
+            category: category,
+          },
+        }}
+        passHref
+      >
         <button
           className={
             sort_by === "comments"
