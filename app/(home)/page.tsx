@@ -3,9 +3,9 @@ import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
 import { db } from "@/lib/db";
+import { buildDealsQuery } from "@/lib/utils";
 import { DealWithComments } from "@/types";
 import { auth } from "@clerk/nextjs";
-import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import DealsPagination from "./_components/deals-pagination";
 import FilterCategory from "./_components/filter-category";
@@ -28,45 +28,12 @@ export default async function Home({ searchParams }: PageProps) {
     orderBy = { comments: { _count: "desc" } };
   }
 
-  const dealsQuery: Prisma.DealFindManyArgs = {
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-    include: {
-      comments: {
-        select: {
-          id: true,
-        },
-      },
-      user: true,
-    },
-    orderBy,
-  };
-
-  if (categoryFilter) {
-    const category = await db.category.findFirst({
-      where: {
-        name: {
-          equals: categoryFilter,
-          mode: "insensitive",
-        },
-      },
-      include: {
-        subcategories: true,
-      },
-    });
-
-    if (category) {
-      const categoryIds = [
-        category.id,
-        ...(category.subcategories.map((sub) => sub.id) || []),
-      ];
-      dealsQuery.where = {
-        categoryId: {
-          in: categoryIds,
-        },
-      };
-    }
-  }
+  const dealsQuery = await buildDealsQuery({
+    page,
+    pageSize,
+    sortBy,
+    categoryFilter,
+  });
 
   const dealsWithComments = (await db.deal.findMany(
     dealsQuery
