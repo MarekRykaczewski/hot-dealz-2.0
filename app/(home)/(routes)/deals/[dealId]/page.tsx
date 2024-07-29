@@ -32,6 +32,12 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
     throw new Error("Deal owner does not have a username");
   }
 
+  const commentCount = await db.comment.count({
+    where: {
+      dealId: deal.id,
+    },
+  });
+
   const { userId } = auth();
   const isDealOwner = deal?.userId === userId;
 
@@ -44,7 +50,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
         <DealMain isDealOwner={isDealOwner} deal={deal as DealBase} />
 
         <CommentSection
-          commentCount={deal.comments.length}
+          commentCount={commentCount}
           dealId={deal.id}
           dealComments={deal.comments}
         />
