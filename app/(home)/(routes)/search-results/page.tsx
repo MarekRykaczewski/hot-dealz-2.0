@@ -7,14 +7,15 @@ import { DealWithComments } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
-import DealsPagination from "./_components/deals-pagination";
-import FilterCategory from "./_components/filter-category";
+import DealsPagination from "../../_components/deals-pagination";
+import FilterCategory from "../../_components/filter-category";
 
-export default async function Home({ searchParams }: PageProps) {
+export default async function SearchResultsPage({ searchParams }: PageProps) {
   const page = parseInt(searchParams?.["page"] as string) || 1;
   const pageSize = parseInt(searchParams?.["per_page"] as string) || 10;
   const sortBy = (searchParams?.["sort_by"] as string) || "score";
   const categoryFilter = (searchParams?.["category"] as string) || "";
+  const searchTerm = (searchParams?.["query"] as string) || "";
 
   const totalCount = await db.deal.count();
 
@@ -29,6 +30,12 @@ export default async function Home({ searchParams }: PageProps) {
   }
 
   const dealsQuery: Prisma.DealFindManyArgs = {
+    where: {
+      title: {
+        contains: searchTerm,
+        mode: "insensitive",
+      },
+    },
     skip: (page - 1) * pageSize,
     take: pageSize,
     include: {

@@ -8,7 +8,7 @@ const SearchItem = ({ deal }: { deal: Deal }) => {
   );
 
   return (
-    <div className="p-3 hover:bg-slate-200">
+    <div className="p-3 w-full hover:bg-slate-200">
       <Link href={`/deals/${deal.id}`} className="flex justify-start">
         <div className="relative mr-3 w-20 p-1 rounded-lg flex items-center justify-center gap-3">
           {deal.imageUrls[0] && (

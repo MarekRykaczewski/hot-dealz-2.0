@@ -11,10 +11,10 @@ export async function POST(req: Request) {
 
     const deals = await db.deal.findMany({
       where: {
-        OR: [
-          { title: { contains: searchTerm, mode: "insensitive" } },
-          { description: { contains: searchTerm, mode: "insensitive" } },
-        ],
+        title: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
       },
       include: {
         category: true,

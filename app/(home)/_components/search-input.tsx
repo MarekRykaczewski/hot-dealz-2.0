@@ -1,16 +1,21 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
 import { Deal } from "@prisma/client";
 import { SearchIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import SearchItem from "./search-item";
 
 const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const [showResults, setShowResults] = useState(false);
+
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchDeals = async () => {
@@ -20,7 +25,7 @@ const SearchInput = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ searchTerm }),
+          body: JSON.stringify({ searchTerm: debouncedSearchTerm }),
         });
 
         if (res.ok) {
@@ -36,10 +41,26 @@ const SearchInput = () => {
 
     if (debouncedSearchTerm) {
       fetchDeals();
+      setShowResults(true);
     } else {
       setSearchResults([]);
+      setShowResults(false);
     }
-  }, [debouncedSearchTerm, searchTerm]);
+  }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        resultsRef.current &&
+        !resultsRef.current.contains(event.target as Node)
+      ) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="relative">
@@ -51,13 +72,25 @@ const SearchInput = () => {
         onChange={(e) => {
           setSearchTerm(e.target.value);
         }}
-        onBlur={() => setSearchResults([])}
+        onFocus={() => {
+          if (searchResults.length > 0) {
+            setShowResults(true);
+          }
+        }}
       />
-      {searchResults.length > 0 && (
-        <div className="absolute z-10 bg-white mt-1 py-1 rounded-md shadow-lg w-full">
+      {showResults && searchResults.length > 0 && (
+        <div
+          ref={resultsRef}
+          className="absolute z-10 flex flex-col gap-1 items-center bg-white overflow-hidden rounded-md shadow-lg w-full"
+        >
           {searchResults.map((deal: Deal) => (
             <SearchItem key={deal.id} deal={deal} />
           ))}
+          <Button className="justify-self-center w-4/5 m-2" variant="orange">
+            <Link href={`/search-results?query=${debouncedSearchTerm}`}>
+              See all results
+            </Link>
+          </Button>
         </div>
       )}
     </div>
