@@ -1,10 +1,12 @@
 interface ProgressBarProps {
-  currentStep: number;
-  totalSteps: number;
+  stepCompletion: boolean[];
 }
 
-const ProgressBar = ({ currentStep, totalSteps }: ProgressBarProps) => {
-  const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
+const ProgressBar = ({ stepCompletion }: ProgressBarProps) => {
+  const totalSteps = stepCompletion.length;
+  const completedSteps = stepCompletion.filter(Boolean).length;
+
+  const progressPercentage = (completedSteps / totalSteps) * 100;
 
   return (
     <div className="w-full h-4 bg-gray-200">

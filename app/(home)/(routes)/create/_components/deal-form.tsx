@@ -1,5 +1,4 @@
 "use client";
-
 import { uploadFiles } from "@/lib/uploadthing";
 import { FormData } from "@/types";
 import { Category } from "@prisma/client";
@@ -72,7 +71,6 @@ const DealForm = ({ categories }: DealFormProps) => {
 
   const onSubmit = async () => {
     try {
-      // Upload image only if it exists
       if (selectedFile) {
         const uploadResponse = await uploadFiles("dealImageUploader", {
           files: [selectedFile],
@@ -80,18 +78,15 @@ const DealForm = ({ categories }: DealFormProps) => {
 
         const uploadedImageUrl = uploadResponse[0].url;
 
-        // Update formData with the uploaded image URL
         const formDataWithImage = {
           ...formData,
-          imageUrls: [...formData.imageUrls, uploadedImageUrl], // Append the new image URL
+          imageUrls: [...formData.imageUrls, uploadedImageUrl],
         };
 
-        // Submit the form data with the uploaded image
         const response = await axios.post("/api/deals", formDataWithImage);
         router.push(`/deals/${response.data.id}`);
         toast.success("Deal Created!");
       } else {
-        // Submit the form data without the image
         const response = await axios.post("/api/deals", formData);
         router.push(`/deals/${response.data.id}`);
         toast.success("Deal Created!");
@@ -147,7 +142,7 @@ const DealForm = ({ categories }: DealFormProps) => {
 
   return (
     <div className="flex w-full flex-col">
-      <ProgressBar currentStep={currentStep} totalSteps={6} />
+      <ProgressBar stepCompletion={formCompletion} />
       <div className="flex w-full">
         <SideBar
           formCompletion={formCompletion}
