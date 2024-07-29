@@ -8,7 +8,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 
-// Adjust the schema to match `FormData`
 const DealImageFormSchema = z.object({
   imageUrls: z.array(z.string()).nonempty("At least one image URL is required"),
 });
@@ -16,43 +15,55 @@ const DealImageFormSchema = z.object({
 interface DealImageFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
   formData: FormData;
-  setSelectedFile: (file: File) => void;
+  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 const DealImageForm = ({
   handleFormStep,
   formData,
-  setSelectedFile,
+  setSelectedFiles,
 }: DealImageFormProps) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  // Ensure the form type matches the `FormData` interface
   const form = useForm<FormData>({
     resolver: zodResolver(DealImageFormSchema),
     defaultValues: {
-      ...formData, // Ensure all required fields are provided
+      ...formData,
       imageUrls: formData.imageUrls,
     },
   });
 
   useEffect(() => {
     if (formData.imageUrls.length > 0) {
-      setImagePreview(formData.imageUrls[0]);
+      setImagePreviews(formData.imageUrls);
     }
   }, [formData.imageUrls]);
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const imageUrl = reader.result as string;
-        setImagePreview(imageUrl);
-        const currentImageUrls = form.getValues("imageUrls");
-        form.setValue("imageUrls", [...currentImageUrls, imageUrl]); // Append to existing image URLs
-        setSelectedFile(file); // Update parent component with selected file
-      };
-      reader.readAsDataURL(file);
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const newPreviews: string[] = [];
+      const fileList: File[] = Array.from(files);
+      fileList.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const imageUrl = reader.result as string;
+          newPreviews.push(imageUrl);
+          if (newPreviews.length === fileList.length) {
+            setImagePreviews((prevPreviews) => [
+              ...prevPreviews,
+              ...newPreviews,
+            ]);
+            const currentImageUrls = form.getValues("imageUrls");
+            form.setValue("imageUrls", [...currentImageUrls, ...newPreviews]);
+            setSelectedFiles((prevFiles: File[]) => [
+              ...prevFiles,
+              ...fileList,
+            ]);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
@@ -60,17 +71,24 @@ const DealImageForm = ({
     <>
       <h1 className="text-3xl text-center font-bold">Deal Image</h1>
       <p className="text-lg text-center text-slate-600">
-        Upload an image for the deal
+        Upload images for the deal
       </p>
 
-      {imagePreview && (
-        <div className="relative text-center h-64 w-full border rounded-xl bg-gray-100">
-          <Image
-            src={imagePreview}
-            alt="Preview"
-            objectFit="contain"
-            layout="fill"
-          />
+      {imagePreviews.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {imagePreviews.map((image, index) => (
+            <div
+              key={index}
+              className="relative text-center h-64 w-64 border rounded-xl bg-gray-100"
+            >
+              <Image
+                src={image}
+                alt={`Preview ${index + 1}`}
+                objectFit="contain"
+                layout="fill"
+              />
+            </div>
+          ))}
         </div>
       )}
 
@@ -81,10 +99,11 @@ const DealImageForm = ({
             type="file"
             accept="image/*"
             className="hidden"
+            multiple // Allow multiple files
             onChange={handleFileInputChange}
           />
           <span className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none">
-            Upload Image
+            Upload Images
           </span>
         </label>
       </div>

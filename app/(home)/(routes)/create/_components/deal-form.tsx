@@ -37,7 +37,7 @@ const DealForm = ({ categories }: DealFormProps) => {
     endDate: undefined,
   });
   const [formCompletion, setFormCompletion] = useState(Array(6).fill(false));
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const router = useRouter();
 
@@ -71,26 +71,24 @@ const DealForm = ({ categories }: DealFormProps) => {
 
   const onSubmit = async () => {
     try {
-      if (selectedFile) {
+      let uploadedImageUrls = formData.imageUrls;
+      if (selectedFiles.length > 0) {
         const uploadResponse = await uploadFiles("dealImageUploader", {
-          files: [selectedFile],
+          files: selectedFiles,
         });
 
-        const uploadedImageUrl = uploadResponse[0].url;
-
-        const formDataWithImage = {
-          ...formData,
-          imageUrls: [...formData.imageUrls, uploadedImageUrl],
-        };
-
-        const response = await axios.post("/api/deals", formDataWithImage);
-        router.push(`/deals/${response.data.id}`);
-        toast.success("Deal Created!");
-      } else {
-        const response = await axios.post("/api/deals", formData);
-        router.push(`/deals/${response.data.id}`);
-        toast.success("Deal Created!");
+        const newUploadedUrls = uploadResponse.map((response) => response.url);
+        uploadedImageUrls = [...uploadedImageUrls, ...newUploadedUrls];
       }
+
+      const formDataWithImages = {
+        ...formData,
+        imageUrls: uploadedImageUrls,
+      };
+
+      const response = await axios.post("/api/deals", formDataWithImages);
+      router.push(`/deals/${response.data.id}`);
+      toast.success("Deal Created!");
     } catch {
       toast.error("Something went wrong");
     }
@@ -109,7 +107,7 @@ const DealForm = ({ categories }: DealFormProps) => {
           <DealImageForm
             handleFormStep={handleFormStep}
             formData={formData}
-            setSelectedFile={setSelectedFile}
+            setSelectedFiles={setSelectedFiles}
           />
         );
       case 3:
@@ -133,7 +131,7 @@ const DealForm = ({ categories }: DealFormProps) => {
             onSubmit={onSubmit}
             formData={formData}
             categories={categories}
-            allStepsComplete={formCompletion.every(Boolean)}
+            allStepsComplete={formCompletion.slice(0, -1).every(Boolean)}
           />
         );
       default:
