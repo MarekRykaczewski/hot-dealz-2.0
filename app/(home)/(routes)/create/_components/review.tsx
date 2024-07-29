@@ -12,9 +12,15 @@ interface ReviewProps {
   onSubmit: () => void;
   formData: FormData;
   categories: Category[];
+  allStepsComplete: boolean;
 }
 
-const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
+const Review = ({
+  onSubmit,
+  formData,
+  categories,
+  allStepsComplete,
+}: ReviewProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getCategoryName = (categoryId: string) => {
@@ -53,6 +59,11 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
   ];
 
   const handleSubmit = async () => {
+    if (!allStepsComplete) {
+      alert("Please complete all steps before submitting.");
+      return;
+    }
+
     setIsLoading(true);
     await onSubmit();
     setIsLoading(false);
@@ -121,10 +132,10 @@ const Review = ({ onSubmit, formData, categories }: ReviewProps) => {
       <Button
         onClick={handleSubmit}
         type="button"
-        disabled={isLoading}
+        disabled={isLoading || !allStepsComplete}
         className={cn(
           "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6",
-          isLoading && "opacity-50 cursor-not-allowed"
+          (isLoading || !allStepsComplete) && "opacity-50 cursor-not-allowed"
         )}
       >
         {isLoading ? "Submitting..." : "Submit"}

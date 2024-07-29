@@ -133,6 +133,7 @@ const DealForm = ({ categories }: DealFormProps) => {
             onSubmit={onSubmit}
             formData={formData}
             categories={categories}
+            allStepsComplete={formCompletion.every(Boolean)}
           />
         );
       default:
