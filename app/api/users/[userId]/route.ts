@@ -11,6 +11,14 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    const existingUsername = await db.user.findUnique({
+      where: { username },
+    });
+
+    if (existingUsername) {
+      return new NextResponse("Username already taken", { status: 400 });
+    }
+
     const existingUser = await db.user.findUnique({
       where: { clerkId: userId },
     });
@@ -37,6 +45,17 @@ export async function PATCH(req: Request) {
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const existingUsername = await db.user.findFirst({
+      where: {
+        username,
+        NOT: { clerkId: userId },
+      },
+    });
+
+    if (existingUsername) {
+      return new NextResponse("Username already taken", { status: 400 });
     }
 
     const existingUser = await db.user.findUnique({
