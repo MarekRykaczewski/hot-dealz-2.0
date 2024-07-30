@@ -99,10 +99,16 @@ const CATEGORIES = [
 ];
 
 async function main() {
+  // Parse command-line arguments
+  const args = process.argv.slice(2);
+  const numUsers = parseInt(args[0], 10) || 5;
+  const numDeals = parseInt(args[1], 10) || 10;
+  const numReactions = parseInt(args[2], 10) || 20;
+
   try {
     // 1. Create Users
     const userCreationResults = await database.user.createMany({
-      data: Array.from({ length: 5 }, () => ({
+      data: Array.from({ length: numUsers }, () => ({
         clerkId: faker.datatype.uuid(),
         username: faker.internet.userName(),
       })),
@@ -137,7 +143,7 @@ async function main() {
     }
 
     // 3. Create Deals
-    const deals = Array.from({ length: 10 }, () => {
+    const deals = Array.from({ length: numDeals }, () => {
       const randomCategory =
         createdCategories[Math.floor(Math.random() * createdCategories.length)];
 
@@ -211,7 +217,7 @@ async function main() {
       .findMany({ select: { id: true } })
       .then((comments) => comments.map((comment) => comment.id));
 
-    const reactions = Array.from({ length: 20 }, () => {
+    const reactions = Array.from({ length: numReactions }, () => {
       return {
         userId: clerkIds[Math.floor(Math.random() * clerkIds.length)],
         commentId: commentIds[Math.floor(Math.random() * commentIds.length)],
