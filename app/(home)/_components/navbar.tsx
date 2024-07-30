@@ -1,8 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@/components/user-button";
 import { cn } from "@/lib/utils";
-import { UserButton, useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { CircleUser, Plus, SearchIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -53,6 +54,8 @@ const Navbar = () => {
             <SearchInput />
           </div>
 
+          {userId && <UserButton />}
+
           <Button
             onClick={() => setIsFocused((prev) => !prev)}
             className="flex sm:hidden rounded-full h-10 w-10 p-2 bg-gray-500 hover:bg-gray-400"
@@ -90,18 +93,6 @@ const Navbar = () => {
           >
             <Plus />
           </Button>
-
-          {userId && (
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "h-9 w-9",
-                },
-              }}
-              userProfileMode="modal"
-              afterSignOutUrl="/"
-            />
-          )}
         </div>
       </div>
     </nav>
