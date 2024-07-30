@@ -101,7 +101,7 @@ const CATEGORIES = [
 async function main() {
   try {
     // 1. Create Users
-    const users = await database.user.createMany({
+    const userCreationResults = await database.user.createMany({
       data: Array.from({ length: 5 }, () => ({
         clerkId: faker.datatype.uuid(),
         username: faker.internet.userName(),
@@ -109,7 +109,8 @@ async function main() {
     });
 
     const allUsers = await database.user.findMany();
-    const userClerkIds = allUsers.map((user) => user.clerkId);
+    const clerkIds = allUsers.map((user) => user.clerkId);
+    const userIds = allUsers.map((user) => user.id);
 
     // 2. Create Categories and Subcategories
     const createdCategories = [];
@@ -140,11 +141,10 @@ async function main() {
       const randomCategory =
         createdCategories[Math.floor(Math.random() * createdCategories.length)];
 
-      const randomUserId =
-        userClerkIds[Math.floor(Math.random() * userClerkIds.length)];
+      const randomUserId = userIds[Math.floor(Math.random() * userIds.length)];
 
       return {
-        userId: randomUserId,
+        userId: allUsers.find((user) => user.id === randomUserId)?.clerkId, // Ensure userId is valid
         title: faker.commerce.productName(),
         link: faker.internet.url(),
         description: faker.lorem.sentence(),
@@ -163,6 +163,48 @@ async function main() {
     await database.deal.createMany({
       data: deals,
     });
+
+    // 4. Create Comments and Replies
+    const dealIds = await database.deal
+      .findMany({ select: { id: true } })
+      .then((deals) => deals.map((deal) => deal.id));
+
+    for (const dealId of dealIds) {
+      // Create comments
+      const comments = Array.from(
+        { length: faker.datatype.number({ min: 4, max: 7 }) },
+        () => ({
+          userId: clerkIds[Math.floor(Math.random() * clerkIds.length)],
+          dealId: dealId,
+          content: faker.lorem.sentence(),
+        })
+      );
+
+      await database.comment.createMany({
+        data: comments,
+      });
+
+      // Create replies for each comment
+      const commentIds = await database.comment
+        .findMany({ where: { dealId: dealId }, select: { id: true } })
+        .then((comments) => comments.map((comment) => comment.id));
+
+      for (const commentId of commentIds) {
+        const replies = Array.from(
+          { length: faker.datatype.number({ min: 0, max: 3 }) },
+          () => ({
+            userId: clerkIds[Math.floor(Math.random() * clerkIds.length)],
+            dealId: dealId,
+            content: faker.lorem.sentence(),
+            parentId: commentId,
+          })
+        );
+
+        await database.comment.createMany({
+          data: replies,
+        });
+      }
+    }
 
     console.log("Success");
   } catch (error) {
