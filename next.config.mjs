@@ -17,6 +17,11 @@ const nextConfig = {
         hostname: "st.depositphotos.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+        pathname: "**",
+      },
     ],
   },
 };
