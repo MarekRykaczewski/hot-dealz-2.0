@@ -72,7 +72,7 @@ export default async function Home({ searchParams }: PageProps) {
             <AlertBanner
               title={"Heads up!"}
               message={
-                "In order to post and interact you should setup a username"
+                "Click here to setup a username, allowing you to post and interact."
               }
             />
           </Link>
