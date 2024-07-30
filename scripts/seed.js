@@ -206,6 +206,23 @@ async function main() {
       }
     }
 
+    // 5. Create Comment Reactions
+    const commentIds = await database.comment
+      .findMany({ select: { id: true } })
+      .then((comments) => comments.map((comment) => comment.id));
+
+    const reactions = Array.from({ length: 20 }, () => {
+      return {
+        userId: clerkIds[Math.floor(Math.random() * clerkIds.length)],
+        commentId: commentIds[Math.floor(Math.random() * commentIds.length)],
+        reaction: ["like", "funny", "helpful"][Math.floor(Math.random() * 3)],
+      };
+    });
+
+    await database.commentReaction.createMany({
+      data: reactions,
+    });
+
     console.log("Success");
   } catch (error) {
     console.log("Error seeding the database", error);
