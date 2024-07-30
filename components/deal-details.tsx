@@ -40,7 +40,7 @@ const DealDetails = ({
         <DealEditForm deal={deal} toggleEditMode={toggleEditMode} />
       ) : (
         <>
-          <div className="max-h-96 sm:w-2/5 mr-3 bg-gray-100 border overflow-hidden rounded-xl">
+          <div className="sm:h-96 h-64 sm:w-2/5 mr-3 bg-gray-100 border overflow-hidden rounded-xl">
             <DealImageCarousel imageUrls={deal.imageUrls} />
           </div>
           <div className="bg-white flex-grow px-0 flex flex-col justify-between">

@@ -31,7 +31,7 @@ const DealMain = ({
         />
       )}
       {<DealStatusBanner deal={deal} />}
-      <div className="flex bg-white rounded-lg p-6">
+      <div className="flex sm:flex-row gap-2 flex-col bg-white rounded-lg p-6">
         <DealDetails
           deal={deal}
           isEditing={isEditing}

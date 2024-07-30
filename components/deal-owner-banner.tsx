@@ -42,7 +42,9 @@ const DealOwnerBanner = ({
 
   return (
     <div
-      className={"flex items-center justify-between bg-white rounded-lg p-6"}
+      className={
+        "flex sm:flex-row flex-col gap-2 items-center justify-between bg-white rounded-lg p-6"
+      }
     >
       <div className="flex items-center gap-2">
         <span className="text-lg font-bold">Status</span>
