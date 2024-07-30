@@ -6,37 +6,41 @@ import { UserButton, useAuth } from "@clerk/nextjs";
 import { CircleUser, Plus, SearchIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Logo from "./logo";
 import SearchInput from "./search-input";
 
 const Navbar = () => {
   const { userId } = useAuth();
-  const [scrollingDown, setScrollingDown] = useState<boolean>(false);
-  const [lastScrollY, setLastScrollY] = useState<number>(0);
+  const [isVisible, setIsVisible] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
+  const navbarRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const handleScroll = () => {
-    const currentScrollY = window.scrollY;
+    if (navbarRef.current) {
+      const navbarHeight = navbarRef.current.offsetHeight;
+      const currentScrollY = window.scrollY;
 
-    setScrollingDown(currentScrollY > lastScrollY);
-    setLastScrollY(currentScrollY);
+      setIsVisible(currentScrollY <= navbarHeight);
+    }
   };
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY]);
+  }, []);
 
   return (
     <nav
+      ref={navbarRef}
       className={cn(
-        "sticky top-0 z-50 bg-gradient-to-r from-stone-700 to-stone-800 px-2 sm:px-6 py-2 shadow-md transition-all duration-300",
-        scrollingDown ? "opacity-0" : "opacity-100"
+        "sticky top-0 z-50 bg-gradient-to-r from-stone-700 to-stone-800 px-2 sm:px-6 py-2 shadow-md transition-opacity duration-300",
+        isVisible ? "opacity-100" : "opacity-0"
       )}
     >
       <div className="flex mx-auto max-w-7xl h-full items-center justify-between flex-col sm:flex-row gap-3 sm:justify-between w-full">
