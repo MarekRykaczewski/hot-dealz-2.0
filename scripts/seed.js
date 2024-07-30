@@ -3,105 +3,117 @@ const { faker } = require("@faker-js/faker");
 
 const database = new PrismaClient();
 
+const CATEGORIES = [
+  {
+    name: "Electronics",
+    subcategories: [
+      "Smartphones",
+      "Laptops",
+      "Tablets",
+      "Cameras",
+      "Smartwatches",
+      "Headphones",
+      "Gaming Consoles",
+    ],
+  },
+  {
+    name: "Music",
+    subcategories: ["Instruments", "Recordings", "Accessories"],
+  },
+  {
+    name: "Fitness",
+    subcategories: ["Gym Equipment", "Fitness Clothing", "Supplements"],
+  },
+  {
+    name: "Groceries",
+    subcategories: [
+      "Fruits",
+      "Vegetables",
+      "Dairy",
+      "Meat",
+      "Bakery",
+      "Canned Goods",
+      "Snacks",
+    ],
+  },
+  {
+    name: "Gaming",
+    subcategories: [
+      "Video Games",
+      "Gaming Accessories",
+      "Gaming Consoles",
+      "Gaming Merchandise",
+    ],
+  },
+  {
+    name: "Fashion",
+    subcategories: [
+      "Clothing",
+      "Shoes",
+      "Accessories",
+      "Bags",
+      "Jewelry",
+      "Watches",
+    ],
+  },
+  {
+    name: "DIY",
+    subcategories: [
+      "Tools",
+      "Home Improvement",
+      "Craft Supplies",
+      "DIY Kits",
+      "Paints and Finishes",
+    ],
+  },
+  {
+    name: "Beauty",
+    subcategories: [
+      "Skincare",
+      "Makeup",
+      "Haircare",
+      "Fragrances",
+      "Personal Care",
+    ],
+  },
+  {
+    name: "Sports",
+    subcategories: [
+      "Sportswear",
+      "Equipment",
+      "Accessories",
+      "Fitness Trackers",
+      "Team Sports Gear",
+    ],
+  },
+  {
+    name: "Travel",
+    subcategories: [
+      "Luggage",
+      "Travel Accessories",
+      "Travel Tech",
+      "Travel Essentials",
+      "Outdoor Gear",
+    ],
+  },
+];
+
 async function main() {
   try {
-    const categories = [
-      {
-        name: "Electronics",
-        subcategories: [
-          "Smartphones",
-          "Laptops",
-          "Tablets",
-          "Cameras",
-          "Smartwatches",
-          "Headphones",
-          "Gaming Consoles",
-        ],
-      },
-      {
-        name: "Music",
-        subcategories: ["Instruments", "Recordings", "Accessories"],
-      },
-      {
-        name: "Fitness",
-        subcategories: ["Gym Equipment", "Fitness Clothing", "Supplements"],
-      },
-      {
-        name: "Groceries",
-        subcategories: [
-          "Fruits",
-          "Vegetables",
-          "Dairy",
-          "Meat",
-          "Bakery",
-          "Canned Goods",
-          "Snacks",
-        ],
-      },
-      {
-        name: "Gaming",
-        subcategories: [
-          "Video Games",
-          "Gaming Accessories",
-          "Gaming Consoles",
-          "Gaming Merchandise",
-        ],
-      },
-      {
-        name: "Fashion",
-        subcategories: [
-          "Clothing",
-          "Shoes",
-          "Accessories",
-          "Bags",
-          "Jewelry",
-          "Watches",
-        ],
-      },
-      {
-        name: "DIY",
-        subcategories: [
-          "Tools",
-          "Home Improvement",
-          "Craft Supplies",
-          "DIY Kits",
-          "Paints and Finishes",
-        ],
-      },
-      {
-        name: "Beauty",
-        subcategories: [
-          "Skincare",
-          "Makeup",
-          "Haircare",
-          "Fragrances",
-          "Personal Care",
-        ],
-      },
-      {
-        name: "Sports",
-        subcategories: [
-          "Sportswear",
-          "Equipment",
-          "Accessories",
-          "Fitness Trackers",
-          "Team Sports Gear",
-        ],
-      },
-      {
-        name: "Travel",
-        subcategories: [
-          "Luggage",
-          "Travel Accessories",
-          "Travel Tech",
-          "Travel Essentials",
-          "Outdoor Gear",
-        ],
-      },
-    ];
+    // 1. Create Users
+    const users = await database.user.createMany({
+      data: Array.from({ length: 5 }, () => ({
+        clerkId: faker.datatype.uuid(),
+        username: faker.internet.userName(),
+      })),
+    });
 
+    const allUsers = await database.user.findMany();
+    const userClerkIds = allUsers.map((user) => user.clerkId);
+
+    // 2. Create Categories and Subcategories
     const createdCategories = [];
-    for (const category of categories) {
+    for (const category of CATEGORIES) {
       const createdCategory = await database.category.upsert({
         where: { name: category.name },
         update: {},
@@ -123,11 +135,16 @@ async function main() {
       }
     }
 
+    // 3. Create Deals
     const deals = Array.from({ length: 10 }, () => {
       const randomCategory =
         createdCategories[Math.floor(Math.random() * createdCategories.length)];
+
+      const randomUserId =
+        userClerkIds[Math.floor(Math.random() * userClerkIds.length)];
+
       return {
-        userId: faker.datatype.uuid(),
+        userId: randomUserId,
         title: faker.commerce.productName(),
         link: faker.internet.url(),
         description: faker.lorem.sentence(),
