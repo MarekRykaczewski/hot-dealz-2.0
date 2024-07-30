@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -20,13 +20,21 @@ const Vote = ({ userId, dealId, score }: VoteProps) => {
         if (!userId || !dealId) return;
 
         const response = await axios.get(`/api/votes/${userId}/${dealId}`);
+
         const vote = response.data;
 
         if (vote) {
           setUserVote(vote.voteValue > 0 ? "like" : "dislike");
         }
-      } catch (error) {
-        console.error("Error fetching user's vote:", error);
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          if (error.response && error.response.status === 404) {
+            return;
+          }
+          console.error("Error fetching user's vote:", error);
+        } else {
+          console.error("Unexpected error:", error);
+        }
       }
     };
 
