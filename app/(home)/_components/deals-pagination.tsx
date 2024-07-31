@@ -41,7 +41,10 @@ const DealsPagination = ({ currentPage, totalPages }: DealsPaginationProps) => {
   }, []);
 
   const goToPage = (page: number) => {
-    router.push(`/?page=${page}`);
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", page.toString());
+    const queryString = params.toString();
+    router.push(`/?${queryString}`);
   };
 
   const scrollToTop = () => {
