@@ -19,6 +19,7 @@ export async function POST(req: Request) {
       include: {
         category: true,
       },
+      take: 5,
     });
 
     return NextResponse.json({ deals });
