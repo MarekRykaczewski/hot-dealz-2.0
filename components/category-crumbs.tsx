@@ -58,7 +58,7 @@ const CategoryCrumbs = async ({
             <BreadcrumbItem>
               <BreadcrumbLink
                 className="hover:underline hover:text-white"
-                href={`/?${category.name}`}
+                href={`/?category=${category.name}`}
               >
                 {category.name}
               </BreadcrumbLink>
