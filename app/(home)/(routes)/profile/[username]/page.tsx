@@ -55,10 +55,10 @@ const ProfilePage = async ({ params }: PageProps) => {
         </div>
         <div className="flex flex-col gap-2 mt-4">
           <span className="text-center text-xl">{username}</span>
-          <span>Member since {memberSince}</span>
+          {memberSince && <span>Member since {memberSince}</span>}
           <div className="flex gap-2 w-full justify-around">
-            <span>{numDeals} deals </span>
-            <span>{numComments} comments</span>
+            <span>{numDeals || 0} deals </span>
+            <span>{numComments || 0} comments</span>
           </div>
         </div>
       </div>
