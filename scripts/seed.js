@@ -149,8 +149,13 @@ async function main() {
 
       const randomUserId = userIds[Math.floor(Math.random() * userIds.length)];
 
+      const price = parseFloat(faker.commerce.price());
+      const priceMultiplier =
+        1 + faker.datatype.number({ min: 10, max: 75 }) / 100;
+      const nextBestPrice = (price * priceMultiplier).toFixed(2);
+
       return {
-        userId: allUsers.find((user) => user.id === randomUserId)?.clerkId, // Ensure userId is valid
+        userId: allUsers.find((user) => user.id === randomUserId)?.clerkId,
         title: faker.commerce.productName(),
         link: faker.internet.url(),
         description: faker.lorem.sentence(),
@@ -160,8 +165,8 @@ async function main() {
         categoryId: randomCategory.id,
         startDate: faker.date.between(new Date(), new Date("2025-12-31")),
         endDate: faker.date.between(new Date(), new Date("2025-12-31")),
-        price: parseFloat(faker.commerce.price()),
-        nextBestPrice: parseFloat(faker.commerce.price()),
+        price: parseFloat(price),
+        nextBestPrice: parseFloat(nextBestPrice),
         shippingPrice: parseFloat(faker.commerce.price()),
       };
     });
