@@ -41,7 +41,7 @@ export const UserButton = () => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuContent className="mt-4 w-52 rounded-xl border border-gray-200 bg-gray-100 px-6 py-4 text-black drop-shadow-2xl">
+        <DropdownMenuContent className="mt-4 w-52 rounded-xl border border-stone-500 bg-stone-600 px-6 py-4 text-black drop-shadow-2xl">
           <DropdownMenuLabel />
           <DropdownMenuGroup className="flex gap-2 flex-col py-3">
             <DropdownMenuItem asChild>
