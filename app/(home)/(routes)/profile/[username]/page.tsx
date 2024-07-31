@@ -1,6 +1,7 @@
 import { PageProps } from "@/.next/types/app/layout";
 import ProfileTabs from "@/components/profile-tabs";
 import { db } from "@/lib/db";
+import { DealWithComments } from "@/types";
 
 const ProfilePage = async ({ params }: PageProps) => {
   const { username } = params;
@@ -17,6 +18,7 @@ const ProfilePage = async ({ params }: PageProps) => {
     where: { userId: user?.clerkId },
     include: {
       user: true,
+      comments: true,
     },
   });
 
@@ -36,6 +38,7 @@ const ProfilePage = async ({ params }: PageProps) => {
     },
     include: {
       user: true,
+      comments: true,
     },
   });
 
@@ -62,7 +65,10 @@ const ProfilePage = async ({ params }: PageProps) => {
           </div>
         </div>
       </div>
-      <ProfileTabs userDeals={userDeals} userSavedDeals={userSavedDeals} />
+      <ProfileTabs
+        userDeals={userDeals as DealWithComments[]}
+        userSavedDeals={userSavedDeals as DealWithComments[]}
+      />
     </div>
   );
 };
