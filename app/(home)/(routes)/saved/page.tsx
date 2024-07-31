@@ -1,4 +1,3 @@
-import { PageProps } from "@/.next/types/app/layout";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
@@ -8,6 +7,7 @@ import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 import DealsPagination from "../../_components/deals-pagination";
 import FilterCategory from "../../_components/filter-category";
+import { PageProps } from "@/.next/types/app/layout";
 
 export default async function SavedDeals({ searchParams }: PageProps) {
   const { userId } = auth();
@@ -102,7 +102,7 @@ export default async function SavedDeals({ searchParams }: PageProps) {
   );
 
   return (
-    <main className="relative flex w-full flex-col items-center bg-gray-100">
+    <main className="relative flex w-full flex-col items-center h-screen bg-gray-100">
       <div className="relative px-6 w-full flex justify-center items-center bg-stone-600 h-16">
         <div className="lg:w-[60vw] w-full">
           <FilterCategory categories={categories} />
@@ -125,7 +125,11 @@ export default async function SavedDeals({ searchParams }: PageProps) {
           </Link>
         ) : null}
       </div>
-      <DealsList deals={dealsWithComments as DealWithComments[]} />
+      {dealsWithComments.length > 0 ? (
+        <DealsList deals={dealsWithComments as DealWithComments[]} />
+      ) : (
+        <p>User has no saved deals</p>
+      )}
       <div className="w-full mt-20">
         <DealsPagination currentPage={page} totalPages={totalPages} />
       </div>
