@@ -19,7 +19,8 @@ export default async function SearchResultsPage({ searchParams }: PageProps) {
 
   const totalCount = await db.deal.count();
 
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const maxPages = 10;
+  const totalPages = Math.min(Math.ceil(totalCount / pageSize), maxPages);
 
   let orderBy: { [key: string]: any } = {};
 
@@ -120,7 +121,7 @@ export default async function SearchResultsPage({ searchParams }: PageProps) {
       </div>
       <DealsList deals={deals} />
       <div className="w-full mt-20">
-        <DealsPagination currentPage={page} totalPages={10} />
+        <DealsPagination currentPage={page} totalPages={totalPages} />
       </div>
     </main>
   );
