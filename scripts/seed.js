@@ -1,5 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
 const { faker } = require("@faker-js/faker");
+const fs = require("fs");
+const path = require("path");
+
+const imageData = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "data.json"), "utf8")
+);
 
 const database = new PrismaClient();
 
@@ -146,13 +152,19 @@ async function main() {
     const deals = Array.from({ length: numDeals }, () => {
       const randomCategory =
         createdCategories[Math.floor(Math.random() * createdCategories.length)];
-
       const randomUserId = userIds[Math.floor(Math.random() * userIds.length)];
-
       const price = parseFloat(faker.commerce.price());
       const priceMultiplier =
         1 + faker.datatype.number({ min: 10, max: 75 }) / 100;
       const nextBestPrice = (price * priceMultiplier).toFixed(2);
+
+      // Randomly select 1 to 3 image URLs from the imageData array
+      const numImages = faker.datatype.number({ min: 1, max: 3 });
+      const imageUrls = Array.from({ length: numImages }, () => {
+        const randomImage =
+          imageData[Math.floor(Math.random() * imageData.length)];
+        return randomImage.url;
+      });
 
       return {
         userId: allUsers.find((user) => user.id === randomUserId)?.clerkId,
@@ -161,7 +173,7 @@ async function main() {
         description: faker.lorem.sentence(),
         score: faker.datatype.number({ min: 1, max: 100 }),
         isPublished: true,
-        imageUrls: [faker.image.imageUrl()],
+        imageUrls: imageUrls,
         categoryId: randomCategory.id,
         startDate: faker.date.between(new Date(), new Date("2025-12-31")),
         endDate: faker.date.between(new Date(), new Date("2025-12-31")),
