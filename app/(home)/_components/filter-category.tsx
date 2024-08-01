@@ -1,12 +1,13 @@
 "use client";
 import { Category } from "@prisma/client";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 
 const FilterCategory = ({ categories }: { categories: Category[] }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const sort_by = searchParams.get("sort_by");
 
   const ref = useRef<HTMLDivElement | null>(null);
@@ -22,7 +23,7 @@ const FilterCategory = ({ categories }: { categories: Category[] }) => {
       category: categoryName,
       sort_by: sort_by || "",
     });
-    router.push(`/?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const categoriesMap = categories
