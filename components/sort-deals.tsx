@@ -14,6 +14,26 @@ const SortDeals = () => {
         href={{
           pathname: "/",
           query: {
+            sort_by: "latest",
+            category: category,
+          },
+        }}
+        passHref
+      >
+        <button
+          className={
+            sort_by === "latest"
+              ? "text-orange-500"
+              : "hover:text-orange-500 transition-all duration-200"
+          }
+        >
+          Latest
+        </button>
+      </Link>
+      <Link
+        href={{
+          pathname: "/",
+          query: {
             sort_by: "score",
             category: category,
           },

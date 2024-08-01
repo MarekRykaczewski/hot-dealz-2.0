@@ -27,6 +27,8 @@ export default async function Home({ searchParams }: PageProps) {
     orderBy = { score: "desc" };
   } else if (sortBy === "comments") {
     orderBy = { comments: { _count: "desc" } };
+  } else if (sortBy === "latest") {
+    orderBy = { createdAt: "desc" };
   }
 
   const dealsQuery = await buildDealsQuery({
