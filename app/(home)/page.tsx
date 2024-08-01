@@ -2,10 +2,10 @@ import { PageProps } from "@/.next/types/app/layout";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
+import { checkUser } from "@/lib/checkUser";
 import { db } from "@/lib/db";
-import { buildDealsQuery } from "@/lib/utils";
-import { DealWithComments } from "@/types";
-import { auth } from "@clerk/nextjs";
+import { fetchCategories } from "@/lib/fetchCategories";
+import { fetchDeals } from "@/lib/fetchDeals";
 import Link from "next/link";
 import DealsPagination from "./_components/deals-pagination";
 import FilterCategory from "./_components/filter-category";
@@ -16,46 +16,12 @@ export default async function Home({ searchParams }: PageProps) {
   const sortBy = (searchParams?.["sort_by"] as string) || "score";
   const categoryFilter = (searchParams?.["category"] as string) || "";
 
+  const deals = await fetchDeals({ page, pageSize, sortBy, categoryFilter });
+  const categories = await fetchCategories();
+  const { userId, hasDatabaseUser } = await checkUser();
+
   const totalCount = await db.deal.count();
-
-  const maxPages = 10;
-  const totalPages = Math.min(Math.ceil(totalCount / pageSize), maxPages);
-
-  let orderBy: { [key: string]: any } = {};
-
-  if (sortBy === "score") {
-    orderBy = { score: "desc" };
-  } else if (sortBy === "comments") {
-    orderBy = { comments: { _count: "desc" } };
-  } else if (sortBy === "latest") {
-    orderBy = { createdAt: "desc" };
-  }
-
-  const dealsQuery = await buildDealsQuery({
-    page,
-    pageSize,
-    sortBy,
-    categoryFilter,
-  });
-
-  const dealsWithComments = (await db.deal.findMany(
-    dealsQuery
-  )) as DealWithComments[];
-
-  const deals: DealWithComments[] = dealsWithComments.map((deal) => ({
-    ...deal,
-    commentCount: deal.comments?.length,
-  }));
-
-  const categories = await db.category.findMany({
-    where: { parentId: null },
-  });
-
-  const { userId } = auth();
-
-  const hasDatabaseUser = !!(
-    userId && (await db.user.findUnique({ where: { clerkId: userId } }))
-  );
+  const totalPages = Math.min(Math.ceil(totalCount / pageSize), 10);
 
   return (
     <main className="relative flex w-full flex-col items-center bg-gray-100">

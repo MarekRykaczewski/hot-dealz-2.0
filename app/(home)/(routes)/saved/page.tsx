@@ -1,16 +1,34 @@
+import { PageProps } from "@/.next/types/app/layout";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
+import { checkUser } from "@/lib/checkUser";
 import { db } from "@/lib/db";
+import { fetchCategories } from "@/lib/fetchCategories";
+import { fetchSavedDeals } from "@/lib/fetchSavedDeals";
 import { DealWithComments } from "@/types";
-import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 import DealsPagination from "../../_components/deals-pagination";
 import FilterCategory from "../../_components/filter-category";
-import { PageProps } from "@/.next/types/app/layout";
 
 export default async function SavedDeals({ searchParams }: PageProps) {
-  const { userId } = auth();
+  const page = parseInt(searchParams?.["page"] as string) || 1;
+  const pageSize = parseInt(searchParams?.["per_page"] as string) || 10;
+  const sortBy = (searchParams?.["sort_by"] as string) || "score";
+  const categoryFilter = (searchParams?.["category"] as string) || "";
+
+  const { userId, hasDatabaseUser } = await checkUser();
+
+  const deals = await fetchSavedDeals({
+    userId: userId!,
+    sortBy,
+    categoryFilter,
+  });
+  const categories = await fetchCategories();
+
+  const totalCount = await db.deal.count();
+  const totalPages = Math.min(Math.ceil(totalCount / pageSize), 10);
+
   if (!userId) {
     return (
       <main className="relative flex w-full flex-col items-center bg-gray-100">
@@ -23,83 +41,6 @@ export default async function SavedDeals({ searchParams }: PageProps) {
       </main>
     );
   }
-
-  const page = parseInt(searchParams?.["page"] as string) || 1;
-  const pageSize = parseInt(searchParams?.["per_page"] as string) || 10;
-  const sortBy = (searchParams?.["sort_by"] as string) || "score";
-  const categoryFilter = (searchParams?.["category"] as string) || "";
-
-  const savedDealsCount = await db.savedDeal.count({
-    where: { userId },
-  });
-
-  const totalPages = Math.ceil(savedDealsCount / pageSize);
-
-  let orderBy: { [key: string]: any } = {};
-
-  if (sortBy === "score") {
-    orderBy = { deal: { score: "desc" } };
-  } else if (sortBy === "comments") {
-    orderBy = { deal: { comments: { _count: "desc" } } };
-  }
-
-  // Fetch all saved deals for the user
-  const savedDeals = await db.savedDeal.findMany({
-    where: { userId },
-    include: {
-      deal: {
-        include: {
-          comments: true,
-          user: true,
-        },
-      },
-    },
-    orderBy: orderBy,
-  });
-
-  // Apply pagination
-  const paginatedSavedDeals = savedDeals.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
-
-  let dealsWithComments = paginatedSavedDeals.map((savedDeal) => ({
-    ...savedDeal.deal,
-    commentCount: savedDeal.deal.comments?.length,
-  }));
-
-  if (categoryFilter) {
-    const category = await db.category.findFirst({
-      where: {
-        name: {
-          equals: categoryFilter,
-          mode: "insensitive",
-        },
-      },
-      include: {
-        subcategories: true,
-      },
-    });
-
-    if (category) {
-      const categoryIds = [
-        category.id,
-        ...(category.subcategories.map((sub) => sub.id) || []),
-      ];
-
-      dealsWithComments = dealsWithComments.filter((deal) =>
-        categoryIds.includes(deal.categoryId!)
-      );
-    }
-  }
-
-  const categories = await db.category.findMany({
-    where: { parentId: null },
-  });
-
-  const hasDatabaseUser = !!(
-    userId && (await db.user.findUnique({ where: { clerkId: userId } }))
-  );
 
   return (
     <main className="relative flex w-full flex-col items-center h-screen bg-gray-100">
@@ -125,8 +66,8 @@ export default async function SavedDeals({ searchParams }: PageProps) {
           </Link>
         ) : null}
       </div>
-      {dealsWithComments.length > 0 ? (
-        <DealsList deals={dealsWithComments as DealWithComments[]} />
+      {deals.length > 0 ? (
+        <DealsList deals={deals as DealWithComments[]} />
       ) : (
         <p>User has no saved deals</p>
       )}

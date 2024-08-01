@@ -2,10 +2,10 @@ import { PageProps } from "@/.next/types/app/layout";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
+import { checkUser } from "@/lib/checkUser";
 import { db } from "@/lib/db";
-import { DealWithComments } from "@/types";
-import { auth } from "@clerk/nextjs";
-import { Prisma } from "@prisma/client";
+import { fetchCategories } from "@/lib/fetchCategories";
+import { fetchDeals } from "@/lib/fetchDeals";
 import Link from "next/link";
 import DealsPagination from "../../_components/deals-pagination";
 import FilterCategory from "../../_components/filter-category";
@@ -17,83 +17,18 @@ export default async function SearchResultsPage({ searchParams }: PageProps) {
   const categoryFilter = (searchParams?.["category"] as string) || "";
   const searchTerm = (searchParams?.["query"] as string) || "";
 
-  const totalCount = await db.deal.count();
-
-  const maxPages = 10;
-  const totalPages = Math.min(Math.ceil(totalCount / pageSize), maxPages);
-
-  let orderBy: { [key: string]: any } = {};
-
-  if (sortBy === "score") {
-    orderBy = { score: "desc" };
-  } else if (sortBy === "comments") {
-    orderBy = { comments: { _count: "desc" } };
-  }
-
-  const dealsQuery: Prisma.DealFindManyArgs = {
-    where: {
-      title: {
-        contains: searchTerm,
-        mode: "insensitive",
-      },
-    },
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-    include: {
-      comments: {
-        select: {
-          id: true,
-        },
-      },
-      user: true,
-    },
-    orderBy,
-  };
-
-  if (categoryFilter) {
-    const category = await db.category.findFirst({
-      where: {
-        name: {
-          equals: categoryFilter,
-          mode: "insensitive",
-        },
-      },
-      include: {
-        subcategories: true,
-      },
-    });
-
-    if (category) {
-      const categoryIds = [
-        category.id,
-        ...(category.subcategories.map((sub) => sub.id) || []),
-      ];
-      dealsQuery.where = {
-        categoryId: {
-          in: categoryIds,
-        },
-      };
-    }
-  }
-
-  const dealsWithComments = (await db.deal.findMany(
-    dealsQuery
-  )) as DealWithComments[];
-
-  const deals: DealWithComments[] = dealsWithComments.map((deal) => ({
-    ...deal,
-    commentCount: deal.comments?.length,
-  }));
-
-  const categories = await db.category.findMany({
-    where: { parentId: null },
+  const deals = await fetchDeals({
+    page,
+    pageSize,
+    sortBy,
+    categoryFilter,
+    searchTerm,
   });
+  const categories = await fetchCategories();
+  const { userId, hasDatabaseUser } = await checkUser();
 
-  const { userId } = auth();
-
-  const hasDatabaseUser = !!(
-    userId && (await db.user.findUnique({ where: { clerkId: userId } }))
-  );
+  const totalCount = await db.deal.count();
+  const totalPages = Math.min(Math.ceil(totalCount / pageSize), 10);
 
   return (
     <main className="relative flex w-full flex-col items-center bg-gray-100">
