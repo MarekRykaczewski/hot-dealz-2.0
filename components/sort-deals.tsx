@@ -8,20 +8,18 @@ const SortDeals = () => {
   const pathname = usePathname();
 
   const sort_by = searchParams.get("sort_by");
-  const category = searchParams.get("category");
+
+  const getLinkProps = (sortByValue: string) => ({
+    pathname: pathname,
+    query: {
+      ...Object.fromEntries(searchParams.entries()),
+      sort_by: sortByValue,
+    },
+  });
 
   return (
     <>
-      <Link
-        href={{
-          pathname: pathname,
-          query: {
-            sort_by: "latest",
-            category: category,
-          },
-        }}
-        passHref
-      >
+      <Link href={getLinkProps("latest")} passHref>
         <button
           className={
             sort_by === "latest"
@@ -32,16 +30,7 @@ const SortDeals = () => {
           Latest
         </button>
       </Link>
-      <Link
-        href={{
-          pathname: pathname,
-          query: {
-            sort_by: "score",
-            category: category,
-          },
-        }}
-        passHref
-      >
+      <Link href={getLinkProps("score")} passHref>
         <button
           className={
             sort_by === "score"
@@ -52,16 +41,7 @@ const SortDeals = () => {
           Score
         </button>
       </Link>
-      <Link
-        href={{
-          pathname: pathname,
-          query: {
-            sort_by: "comments",
-            category: category,
-          },
-        }}
-        passHref
-      >
+      <Link href={getLinkProps("comments")} passHref>
         <button
           className={
             sort_by === "comments"

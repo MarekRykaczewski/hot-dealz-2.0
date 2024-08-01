@@ -19,10 +19,14 @@ const FilterCategory = ({ categories }: { categories: Category[] }) => {
   };
 
   const handleCategoryClick = (categoryName: string) => {
-    const params = new URLSearchParams({
-      category: categoryName,
-      sort_by: sort_by || "",
-    });
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("category", categoryName);
+
+    if (sort_by) {
+      params.set("sort_by", sort_by);
+    }
+
     router.push(`${pathname}?${params.toString()}`);
   };
 
