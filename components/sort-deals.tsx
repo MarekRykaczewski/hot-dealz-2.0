@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const SortDeals = () => {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const sort_by = searchParams.get("sort_by");
   const category = searchParams.get("category");
 
@@ -12,7 +14,7 @@ const SortDeals = () => {
     <>
       <Link
         href={{
-          pathname: "/",
+          pathname: pathname,
           query: {
             sort_by: "latest",
             category: category,
@@ -32,7 +34,7 @@ const SortDeals = () => {
       </Link>
       <Link
         href={{
-          pathname: "/",
+          pathname: pathname,
           query: {
             sort_by: "score",
             category: category,
@@ -52,7 +54,7 @@ const SortDeals = () => {
       </Link>
       <Link
         href={{
-          pathname: "/",
+          pathname: pathname,
           query: {
             sort_by: "comments",
             category: category,
