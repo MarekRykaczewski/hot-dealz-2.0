@@ -77,6 +77,17 @@ const DealImageForm = ({
     }
   };
 
+  const handleRemoveImage = (index: number) => {
+    setImagePreviews((prevPreviews) =>
+      prevPreviews.filter((_, i) => i !== index)
+    );
+    const currentImageUrls = form.getValues("imageUrls");
+    form.setValue(
+      "imageUrls",
+      currentImageUrls.filter((_, i) => i !== index)
+    );
+  };
+
   return (
     <>
       <h1 className="text-3xl text-center font-bold">Deal Image</h1>
@@ -97,6 +108,13 @@ const DealImageForm = ({
                 objectFit="contain"
                 layout="fill"
               />
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(index)}
+                className="absolute top-2 right-2 bg-red-500 opacity-75 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm hover:bg-red-700"
+              >
+                X
+              </button>
             </div>
           ))}
         </div>
