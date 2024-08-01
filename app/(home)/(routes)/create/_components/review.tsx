@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface ReviewProps {
+  handleBackStep: () => void;
   onSubmit: () => void;
   formData: FormData;
   categories: Category[];
@@ -16,6 +17,7 @@ interface ReviewProps {
 }
 
 const Review = ({
+  handleBackStep,
   onSubmit,
   formData,
   categories,
@@ -128,18 +130,22 @@ const Review = ({
           </span>
         ))}
       </div>
-
-      <Button
-        onClick={handleSubmit}
-        type="button"
-        disabled={isLoading || !allStepsComplete}
-        className={cn(
-          "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6",
-          (isLoading || !allStepsComplete) && "opacity-50 cursor-not-allowed"
-        )}
-      >
-        {isLoading ? "Submitting..." : "Submit"}
-      </Button>
+      <div className="flex justify-center items-center gap-x-2 mt-6">
+        <Button onClick={handleBackStep} type="button" variant="ghost">
+          Back
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          type="button"
+          disabled={isLoading || !allStepsComplete}
+          className={cn(
+            "bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 rounded focus:outline-none focus:shadow-outline",
+            (isLoading || !allStepsComplete) && "opacity-50 cursor-not-allowed"
+          )}
+        >
+          {isLoading ? "Submitting..." : "Submit"}
+        </Button>
+      </div>
     </div>
   );
 };

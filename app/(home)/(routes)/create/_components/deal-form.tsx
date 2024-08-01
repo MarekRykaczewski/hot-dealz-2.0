@@ -69,6 +69,10 @@ const DealForm = ({ categories }: DealFormProps) => {
     });
   };
 
+  const handleBackStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
   const onSubmit = async () => {
     try {
       let uploadedImageUrls = formData.imageUrls;
@@ -101,11 +105,18 @@ const DealForm = ({ categories }: DealFormProps) => {
           <DealLinkForm handleFormStep={handleFormStep} formData={formData} />
         );
       case 1:
-        return <DealInfo handleFormStep={handleFormStep} formData={formData} />;
+        return (
+          <DealInfo
+            handleFormStep={handleFormStep}
+            handleBackStep={handleBackStep}
+            formData={formData}
+          />
+        );
       case 2:
         return (
           <DealImageForm
             handleFormStep={handleFormStep}
+            handleBackStep={handleBackStep}
             formData={formData}
             setSelectedFiles={setSelectedFiles}
           />
@@ -114,6 +125,7 @@ const DealForm = ({ categories }: DealFormProps) => {
         return (
           <DealDescriptionForm
             handleFormStep={handleFormStep}
+            handleBackStep={handleBackStep}
             formData={formData}
           />
         );
@@ -121,6 +133,7 @@ const DealForm = ({ categories }: DealFormProps) => {
         return (
           <DealFinalForm
             handleFormStep={handleFormStep}
+            handleBackStep={handleBackStep}
             options={categories}
             formData={formData}
           />
@@ -128,6 +141,7 @@ const DealForm = ({ categories }: DealFormProps) => {
       case 5:
         return (
           <Review
+            handleBackStep={handleBackStep}
             onSubmit={onSubmit}
             formData={formData}
             categories={categories}

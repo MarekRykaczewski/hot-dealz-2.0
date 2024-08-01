@@ -21,6 +21,7 @@ const DealFinalFormSchema = z.object({
 
 interface DealFinalFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  handleBackStep: () => void;
   options: {
     name: string;
     id: string;
@@ -30,6 +31,7 @@ interface DealFinalFormProps {
 
 const DealFinalForm = ({
   handleFormStep,
+  handleBackStep,
   options,
   formData,
 }: DealFinalFormProps) => {
@@ -101,8 +103,8 @@ const DealFinalForm = ({
           />
 
           <div className="flex items-center space-x-2">
-            <Button type="button" variant="ghost">
-              Cancel
+            <Button onClick={handleBackStep} type="button" variant="ghost">
+              Back
             </Button>
             <Button type="button" onClick={() => handleFormStep(form)}>
               Continue

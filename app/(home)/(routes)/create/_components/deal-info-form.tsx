@@ -28,10 +28,15 @@ const dealInfoSchema = z
 
 interface DealInfoProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  handleBackStep: () => void;
   formData: FormData;
 }
 
-const DealInfo = ({ handleFormStep, formData }: DealInfoProps) => {
+const DealInfo = ({
+  handleFormStep,
+  handleBackStep,
+  formData,
+}: DealInfoProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(dealInfoSchema),
     defaultValues: {
@@ -177,7 +182,7 @@ const DealInfo = ({ handleFormStep, formData }: DealInfoProps) => {
           />
 
           <div className="flex items-center gap-x-2">
-            <Button type="button" variant="ghost">
+            <Button onClick={handleBackStep} type="button" variant="ghost">
               Back
             </Button>
             <Button onClick={() => handleFormStep(form)} type="button">

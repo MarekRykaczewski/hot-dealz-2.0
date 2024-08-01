@@ -14,12 +14,14 @@ const DealImageFormSchema = z.object({
 
 interface DealImageFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  handleBackStep: () => void;
   formData: FormData;
   setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 const DealImageForm = ({
   handleFormStep,
+  handleBackStep,
   formData,
   setSelectedFiles,
 }: DealImageFormProps) => {
@@ -117,7 +119,7 @@ const DealImageForm = ({
       </div>
 
       <div className="flex items-center gap-x-2">
-        <Button type="button" variant="ghost">
+        <Button onClick={handleBackStep} type="button" variant="ghost">
           Back
         </Button>
         <Button onClick={() => handleFormStep(form)} type="button">

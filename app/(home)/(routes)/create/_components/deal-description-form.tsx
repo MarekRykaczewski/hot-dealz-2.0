@@ -18,11 +18,13 @@ const DealDescriptionFormSchema = z.object({
 
 interface DealDescriptionFormProps {
   handleFormStep: (form: UseFormReturn<FormData>) => void;
+  handleBackStep: () => void;
   formData: FormData;
 }
 
 const DealDescriptionForm = ({
   handleFormStep,
+  handleBackStep,
   formData,
 }: DealDescriptionFormProps) => {
   const form = useForm<FormData>({
@@ -55,7 +57,7 @@ const DealDescriptionForm = ({
             )}
           />
           <div className="flex items-center gap-x-2">
-            <Button type="button" variant="ghost">
+            <Button onClick={handleBackStep} type="button" variant="ghost">
               Back
             </Button>
             <Button onClick={() => handleFormStep(form)} type="submit">
