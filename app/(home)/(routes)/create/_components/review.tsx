@@ -70,7 +70,7 @@ const Review = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md p-6">
+    <div className="w-fit bg-white rounded-lg shadow-md p-6">
       <h1 className="text-3xl text-center font-bold mb-4">Review</h1>
       <p className="text-lg text-center text-gray-700 mb-6">
         Please review your information before submitting:

@@ -50,7 +50,7 @@ const SideBar = ({
     },
   ];
   return (
-    <div className="p-6 border-r text-gray-800 h-full w-full max-w-xs">
+    <div className="p-6 sm:border-r text-gray-800 h-full w-full">
       <h1 className="text-2xl font-semibold mb-10">Publish your deal</h1>
       <div className="flex flex-col gap-y-4">
         {routesMap.map((route, index) => (

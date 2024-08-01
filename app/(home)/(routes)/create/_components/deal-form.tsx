@@ -142,13 +142,16 @@ const DealForm = ({ categories }: DealFormProps) => {
   return (
     <div className="flex w-full flex-col">
       <ProgressBar stepCompletion={formCompletion} />
-      <div className="flex w-full">
-        <SideBar
-          formCompletion={formCompletion}
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
-        />
-        <div className="flex flex-col mb-[25vh] p-6 w-full items-center justify-center">
+      <div className="flex sm:flex-row flex-col w-full h-[calc(100vh-88px)]">
+        <div className="sm:w-1/3">
+          <SideBar
+            formCompletion={formCompletion}
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
+          />
+        </div>
+
+        <div className="flex flex-col items-center p-6 w-full justify-start">
           {renderStep()}
         </div>
       </div>

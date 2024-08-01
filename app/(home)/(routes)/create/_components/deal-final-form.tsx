@@ -43,15 +43,15 @@ const DealFinalForm = ({
   });
 
   return (
-    <>
+    <div className="w-full items-center flex flex-col">
       <h1 className="text-3xl text-center font-bold">Wrapping up</h1>
       <p className="text-lg text-center text-slate-600">
         You&apos;re almost there
       </p>
 
       <FormProvider {...form}>
-        <div className="space-y-8 mt-8">
-          <div className="flex justify-between space-x-3">
+        <div className="flex flex-col space-y-8 mt-8">
+          <div className="flex flex-col flex-wrap gap-3">
             <FormField
               control={form.control}
               name="startDate"
@@ -110,7 +110,7 @@ const DealFinalForm = ({
           </div>
         </div>
       </FormProvider>
-    </>
+    </div>
   );
 };
 
