@@ -25,11 +25,11 @@ const DealImageCarousel = ({ imageUrls }: { imageUrls: string[] }) => {
   };
 
   return (
-    <div className="h-full w-max-full relative group">
+    <div className="sm:h-64 lg:w-64 h-full w-full relative group">
       {slides.length > 0 && (
         <Image
           alt=""
-          objectFit="contain"
+          objectFit="scale-down"
           fill
           src={`${slides[currentIndex]}`}
         />

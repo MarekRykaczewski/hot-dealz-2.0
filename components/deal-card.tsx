@@ -45,14 +45,14 @@ const DealCard = ({ deal }: { deal: DealWithComments }) => {
   return (
     <div
       className={cn(
-        "w-[95vw] xl:w-[60vw] shadow-md bg-white p-4 rounded-xl flex flex-col sm:flex-row sm:justify-between",
+        "w-[95vw] xl:w-[60vw] shadow-md bg-white p-4 rounded-xl flex flex-col lg:flex-row justify-between",
         dealExpired || (dealEnded && "grayscale")
       )}
     >
-      <div className="h-64 sm:w-64 bg-gray-100 border overflow-hidden rounded-xl">
+      <div className="h-64 lg:w-64 w-full bg-gray-100 border overflow-hidden rounded-xl">
         <DealImageCarousel imageUrls={deal.imageUrls} />
       </div>
-      <div className="bg-white flex-grow sm:px-4 px-0 py-4 sm:py-0 flex flex-col justify-between">
+      <div className="bg-white flex-grow sm:px-4 px-0 py-4 lg:py-0 flex flex-col justify-between">
         <div className="flex flex-col gap-1">
           <div className="text-sm text-gray-600 flex justify-between">
             <Vote userId={userId!} dealId={deal.id} score={score} />
@@ -103,7 +103,7 @@ const DealCard = ({ deal }: { deal: DealWithComments }) => {
 
           <Preview value={description} />
         </div>
-        <div className="flex justify-between">
+        <div className="flex mt-2 sm:flex-nowrap gap-2 flex-wrap justify-center sm:justify-between">
           <UserProfileLink username={posterUser.username} />
           <div className="flex gap-2">
             <SavedDealButton dealId={deal.id} />
