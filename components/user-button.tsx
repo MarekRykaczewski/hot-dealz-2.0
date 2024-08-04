@@ -33,11 +33,13 @@ export const UserButton = () => {
             src={user?.imageUrl}
             width={30}
             height={30}
-            className="mr-2 rounded-full ring-2 ring-stone-500 drop-shadow-sm"
+            className="sm:mr-2 m-0 rounded-full ring-2 ring-stone-500 drop-shadow-sm"
           />
-          {user?.username
-            ? user.username
-            : user?.primaryEmailAddress?.emailAddress!}
+          <span className={`sm:block hidden`}>
+            {user?.username
+              ? user.username
+              : user?.primaryEmailAddress?.emailAddress!}
+          </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>

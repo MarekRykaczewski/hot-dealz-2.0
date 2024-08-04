@@ -66,7 +66,7 @@ const SearchInput = () => {
     <div className="relative">
       <SearchIcon className="h-4 w-4 absolute top-3 left-3 text-slate-500" />
       <Input
-        className="sm:focus:w-fit w-[70vw] sm:w-fit rounded-full px-9 transition-all duration-100"
+        className="sm:focus:w-fit w-[60vw] sm:w-fit rounded-full px-9 transition-all duration-100"
         placeholder="Search..."
         value={searchTerm}
         onChange={(e) => {
