@@ -44,6 +44,7 @@ const CommentForm = ({ dealId }: CommentFormProps) => {
       await axios.post(`/api/deals/${dealId}/comment`, form.getValues());
       toast.success("Comment posted successfully!");
       form.reset();
+      location.reload();
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
