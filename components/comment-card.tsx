@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ReplyForm from "./reply-form";
 import { Button } from "./ui/button";
+import UserProfileLink from "./user-profile-link";
 
 interface Reaction {
   reaction: string;
@@ -117,9 +118,9 @@ const CommentCard = ({ comment }: { comment: CommentBase }) => {
   };
 
   return (
-    <div className="border bg-white p-2 rounded-lg" key={comment.id}>
+    <div className="border bg-white p-4 rounded-lg" key={comment.id}>
       <div className="flex justify-between">
-        {/* <UserProfileLink username={comment.user.username} /> */}
+        <UserProfileLink username={comment.user.username} />
       </div>
       <div className="px-1 py-3">
         <p>{comment.content}</p>
@@ -179,7 +180,11 @@ const CommentCard = ({ comment }: { comment: CommentBase }) => {
         )}
       </div>
       {!repliesLoaded && (
-        <Button onClick={loadReplies} variant="ghost" disabled={loadingReplies}>
+        <Button
+          onClick={loadReplies}
+          variant="outline"
+          disabled={loadingReplies}
+        >
           {loadingReplies ? "Loading..." : "Load Replies"}
         </Button>
       )}
