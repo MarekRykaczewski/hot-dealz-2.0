@@ -20,18 +20,36 @@ const FinishAccountSetup = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const { data } = await axios.post(`/api/users/${userId}`, { username });
-      if (data.id) {
-        toast.success("Account setup completed successfully!");
-        router.push("/");
-      } else {
-        await axios.patch(`/api/users/${userId}`, { username });
-        toast.success("Username updated successfully!");
-        router.push("/");
+
+      // Determine if user exists and what action to take
+      let action;
+      try {
+        const { data } = await axios.get(`/api/users/${userId}`);
+        action = data ? "patch" : "post";
+      } catch (err) {
+        console.error("Error checking user existence:", err);
+        toast.error("Something went wrong. Please try again later.");
+        return;
       }
-    } catch (error) {
-      console.error("Error updating username:", error);
-      toast.error("Something went wrong. Please try again later.");
+
+      try {
+        const response =
+          action === "post"
+            ? await axios.post(`/api/users/${userId}`, { username })
+            : await axios.patch(`/api/users/${userId}`, { username });
+
+        if (response.data.id) {
+          toast.success(
+            action === "post"
+              ? "Account setup completed successfully!"
+              : "Username updated successfully!"
+          );
+          router.push("/");
+        }
+      } catch (err) {
+        console.error("Error saving username:", err);
+        toast.error("Something went wrong. Please try again later.");
+      }
     } finally {
       setIsLoading(false);
     }
