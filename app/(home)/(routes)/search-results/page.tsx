@@ -1,4 +1,4 @@
-import { PageProps } from "@/.next/types/app/layout";
+import { PageProps } from "@/.next/types/app/(home)/(routes)/search-results/page";
 import AlertBanner from "@/components/alert-banner";
 import DealsList from "@/components/deals-list";
 import SortDeals from "@/components/sort-deals";
@@ -31,7 +31,7 @@ export default async function SearchResultsPage({ searchParams }: PageProps) {
   const totalPages = Math.min(Math.ceil(totalCount / pageSize), 10);
 
   return (
-    <main className="relative flex w-full flex-col items-center bg-gray-100">
+    <main className="relative flex w-full flex-col items-center h-screen bg-gray-100">
       <div className="relative px-6 w-full flex justify-center items-center bg-stone-600 h-16">
         <div className="lg:w-[60vw] w-full">
           <FilterCategory categories={categories} />
