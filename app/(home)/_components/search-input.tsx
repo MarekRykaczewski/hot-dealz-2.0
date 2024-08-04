@@ -86,11 +86,11 @@ const SearchInput = () => {
           {searchResults.map((deal: Deal) => (
             <SearchItem key={deal.id} deal={deal} />
           ))}
-          <Button className="justify-self-center w-4/5 m-2" variant="orange">
-            <Link href={`/search-results?query=${debouncedSearchTerm}`}>
+          <Link href={`/search-results?query=${debouncedSearchTerm}`}>
+            <Button className="justify-self-center w-4/5 m-2" variant="orange">
               See all results
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </div>
       )}
     </div>

@@ -56,15 +56,15 @@ export const UserButton = () => {
               </Button>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Button variant="orange" className="py-3">
-                <Link
-                  href={`/profile/${user.username}`}
-                  passHref
-                  className="py-3"
-                >
+              <Link
+                href={`/profile/${user.username}`}
+                passHref
+                className="py-3"
+              >
+                <Button variant="orange" className="py-3 w-full">
                   Hot Dealz Profile
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Button variant="orange">
