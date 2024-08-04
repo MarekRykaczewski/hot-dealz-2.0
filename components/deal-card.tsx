@@ -45,11 +45,11 @@ const DealCard = ({ deal }: { deal: DealWithComments }) => {
   return (
     <div
       className={cn(
-        "w-[95vw] xl:w-[60vw] shadow-md bg-white p-4 rounded-xl flex flex-col lg:flex-row justify-between",
+        "w-[95vw] xl:w-[60vw] shadow-md bg-white p-4 rounded-xl flex flex-col md:flex-row justify-between",
         dealExpired || (dealEnded && "grayscale")
       )}
     >
-      <div className="h-64 lg:w-64 w-full bg-gray-100 border overflow-hidden rounded-xl">
+      <div className="md:h-48 md:w-48 lg:w-64 lg:h-64 sm:w-full sm:h-48 h-48 bg-gray-100 border overflow-hidden rounded-xl">
         <DealImageCarousel imageUrls={deal.imageUrls} />
       </div>
       <div className="bg-white flex-grow sm:px-4 px-0 py-4 lg:py-0 flex flex-col justify-between">
