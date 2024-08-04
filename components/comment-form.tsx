@@ -10,6 +10,7 @@ import {
   FormSubmitHandler,
   useForm,
 } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { Button } from "./ui/button";
 import {
@@ -41,6 +42,8 @@ const CommentForm = ({ dealId }: CommentFormProps) => {
   const handleSubmit: FormSubmitHandler<FieldValues> = async () => {
     try {
       await axios.post(`/api/deals/${dealId}/comment`, form.getValues());
+      toast.success("Comment posted successfully!");
+      form.reset();
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
