@@ -43,7 +43,7 @@ const DealPage = async ({ params }: { params: { dealId: string } }) => {
 
   return (
     <div className="w-full bg-gray-100">
-      <div className="bg-stone-700 py-3 px-6">
+      <div className="bg-stone-600 py-3 px-6">
         <CategoryCrumbs categoryId={deal.categoryId} />
       </div>
       <div className="flex flex-col gap-3 mx-auto py-2 sm:px-2 sm:w-full lg:w-[45vw]">
