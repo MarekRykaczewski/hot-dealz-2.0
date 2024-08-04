@@ -36,7 +36,7 @@ const CommentSection = ({
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       } else if (sortCriteria === "liked") {
-        return b.likes - a.likes;
+        return b.reactions.length - a.reactions.length;
       } else {
         return (
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()

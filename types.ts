@@ -1,4 +1,4 @@
-import { Comment, Deal } from "@prisma/client";
+import { Comment, CommentReaction, Deal } from "@prisma/client";
 
 export interface DealBase extends Deal {
   user: {
@@ -18,7 +18,7 @@ export interface DealWithComments extends DealBase {
 }
 
 export interface CommentWithLikes extends CommentBase {
-  likes: number;
+  reactions: CommentReaction[];
   childComments?: CommentWithChildren[];
 }
 
