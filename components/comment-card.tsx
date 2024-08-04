@@ -1,6 +1,7 @@
 "use client";
 
 import useComponentVisible from "@/hooks/useComponentVisible";
+import { timeAgo } from "@/lib/utils";
 import { CommentBase } from "@/types";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
@@ -121,6 +122,9 @@ const CommentCard = ({ comment }: { comment: CommentBase }) => {
     <div className="border bg-white p-4 rounded-lg" key={comment.id}>
       <div className="flex justify-between">
         <UserProfileLink username={comment.user.username} />
+        <span className="text-gray-500 text-sm">
+          {timeAgo(comment.createdAt)}
+        </span>
       </div>
       <div className="px-1 py-3">
         <p>{comment.content}</p>
